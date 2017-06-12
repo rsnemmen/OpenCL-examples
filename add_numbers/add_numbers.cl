@@ -1,3 +1,8 @@
+/*
+Code that contains kernels to run on accelerator. This will be run
+in parallel.
+*/
+
 __kernel void add_numbers(__global float4* data, 
       __local float* local_result, __global float* group_result) {
 

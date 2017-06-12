@@ -14,7 +14,16 @@
 #include <CL/cl.h>
 #endif
 
-/* Find a GPU or CPU associated with the first available platform */
+/* Find a GPU or CPU associated with the first available platform 
+
+The `platform` structure identifies the first platform identified by the 
+OpenCL runtime. A platform identifies a vendor's installation, so a system 
+may have an NVIDIA platform and an AMD platform. 
+
+The `device` structure corresponds to the first accessible device 
+associated with the platform. Because the second parameter is 
+`CL_DEVICE_TYPE_GPU`, this device must be a GPU.
+*/
 cl_device_id create_device() {
 
    cl_platform_id platform;
@@ -28,9 +37,11 @@ cl_device_id create_device() {
       exit(1);
    } 
 
-   /* Access a device */
+   // Access a device
+   // GPU
    err = clGetDeviceIDs(platform, CL_DEVICE_TYPE_GPU, 1, &dev, NULL);
    if(err == CL_DEVICE_NOT_FOUND) {
+      // CPU
       err = clGetDeviceIDs(platform, CL_DEVICE_TYPE_CPU, 1, &dev, NULL);
    }
    if(err < 0) {
@@ -40,6 +51,10 @@ cl_device_id create_device() {
 
    return dev;
 }
+
+
+
+
 
 /* Create program from a file and compile it */
 cl_program build_program(cl_context ctx, cl_device_id dev, const char* filename) {
@@ -92,6 +107,10 @@ cl_program build_program(cl_context ctx, cl_device_id dev, const char* filename)
    return program;
 }
 
+
+
+
+
 int main() {
 
    /* OpenCL structures */
@@ -114,7 +133,10 @@ int main() {
       data[i] = 1.0f*i;
    }
 
-   /* Create device and context */
+   /* Create device and context 
+   Creates a context containing only one device — the device structure 
+   created earlier.
+   */
    device = create_device();
    context = clCreateContext(NULL, 1, &device, NULL, NULL, &err);
    if(err < 0) {
