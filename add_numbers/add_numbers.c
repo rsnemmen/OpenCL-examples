@@ -177,7 +177,7 @@ int main() {
    utilization of cores
    • Optimal workgroup size differs across applications
    */
-   global_size = 8; 
+   global_size = 8; // WHY ONLY 8?
    local_size = 4; 
    num_groups = global_size/local_size;
    input_buffer = clCreateBuffer(context, CL_MEM_READ_ONLY |
@@ -207,9 +207,9 @@ int main() {
    };
 
    /* Create kernel arguments */
-   err = clSetKernelArg(kernel, 0, sizeof(cl_mem), &input_buffer);
+   err = clSetKernelArg(kernel, 0, sizeof(cl_mem), &input_buffer); // input
    err |= clSetKernelArg(kernel, 1, local_size * sizeof(float), NULL);
-   err |= clSetKernelArg(kernel, 2, sizeof(cl_mem), &sum_buffer);
+   err |= clSetKernelArg(kernel, 2, sizeof(cl_mem), &sum_buffer); // ouput
    if(err < 0) {
       perror("Couldn't create a kernel argument");
       exit(1);
