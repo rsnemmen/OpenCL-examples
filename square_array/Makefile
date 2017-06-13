@@ -1,4 +1,4 @@
-PROJ=add_numbers
+PROJ=square
 
 CC=gcc
 
