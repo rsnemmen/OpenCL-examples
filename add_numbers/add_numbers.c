@@ -151,10 +151,6 @@ int main() {
    */
    device = create_device();
    context = clCreateContext(NULL, 1, &device, NULL, NULL, &err);
-   if(err < 0) {
-      perror("Couldn't create a context");
-      exit(1);   
-   }
 
    /* Build program */
    program = build_program(context, device, PROGRAM_FILE);
@@ -185,36 +181,20 @@ int main() {
          CL_MEM_COPY_HOST_PTR, ARRAY_SIZE * sizeof(float), data, &err); // <=====INPUT
    sum_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE |
          CL_MEM_COPY_HOST_PTR, num_groups * sizeof(float), sum, &err); // <=====OUTPUT
-   if(err < 0) {
-      perror("Couldn't create a buffer");
-      exit(1);   
-   };
 
    /* Create a command queue 
 
    Does not support profiling or out-of-order-execution
    */
    queue = clCreateCommandQueue(context, device, 0, &err);
-   if(err < 0) {
-      perror("Couldn't create a command queue");
-      exit(1);   
-   };
 
    /* Create a kernel */
    kernel = clCreateKernel(program, KERNEL_FUNC, &err);
-   if(err < 0) {
-      perror("Couldn't create a kernel");
-      exit(1);
-   };
 
    /* Create kernel arguments */
-   err = clSetKernelArg(kernel, 0, sizeof(cl_mem), &input_buffer); // <=====INPUT
-   err |= clSetKernelArg(kernel, 1, local_size * sizeof(float), NULL);
-   err |= clSetKernelArg(kernel, 2, sizeof(cl_mem), &sum_buffer); // <=====OUTPUT
-   if(err < 0) {
-      perror("Couldn't create a kernel argument");
-      exit(1);
-   }
+   clSetKernelArg(kernel, 0, sizeof(cl_mem), &input_buffer); // <=====INPUT
+   clSetKernelArg(kernel, 1, local_size * sizeof(float), NULL);
+   clSetKernelArg(kernel, 2, sizeof(cl_mem), &sum_buffer); // <=====OUTPUT
 
    /* Enqueue kernel 
 
@@ -228,20 +208,12 @@ int main() {
    be generated to execute the kernel (global_size) and the number of 
    work-items in each work-group (local_size).
    */
-   err = clEnqueueNDRangeKernel(queue, kernel, 1, NULL, &global_size, 
+   clEnqueueNDRangeKernel(queue, kernel, 1, NULL, &global_size, 
          &local_size, 0, NULL, NULL); 
-   if(err < 0) {
-      perror("Couldn't enqueue the kernel");
-      exit(1);
-   }
 
    /* Read the kernel's output    */
-   err = clEnqueueReadBuffer(queue, sum_buffer, CL_TRUE, 0, 
+   clEnqueueReadBuffer(queue, sum_buffer, CL_TRUE, 0, 
          sizeof(sum), sum, 0, NULL, NULL); // <=====GET OUTPUT
-   if(err < 0) {
-      perror("Couldn't read the buffer");
-      exit(1);
-   }
 
    /* Check result */
    total = 0.0f;

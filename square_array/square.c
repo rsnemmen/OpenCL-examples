@@ -151,10 +151,6 @@ int main() {
    */
    device = create_device();
    context = clCreateContext(NULL, 1, &device, NULL, NULL, &err);
-   if(err < 0) {
-      perror("Couldn't create a context");
-      exit(1);   
-   }
 
    /* Build program */
    program = build_program(context, device, PROGRAM_FILE);
@@ -179,44 +175,26 @@ int main() {
    • Optimal workgroup size differs across applications
    */
    global_size = ARRAY_SIZE;
-   //local_size = 4; 
+   local_size = MAX_CUS; 
    //num_groups = global_size/local_size;
-   input_buffer = clCreateBuffer(context, CL_MEM_READ_ONLY |
-         CL_MEM_COPY_HOST_PTR, ARRAY_SIZE * sizeof(float), data, &err); // <=====INPUT
-   out_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE |
-         CL_MEM_COPY_HOST_PTR, ARRAY_SIZE * sizeof(float), output, &err); // <=====OUTPUT
-   if(err < 0) {
-      perror("Couldn't create a buffer");
-      exit(1);   
-   };
+   input_buffer = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, ARRAY_SIZE * sizeof(float), data, &err); // <=====INPUT
+   out_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, ARRAY_SIZE * sizeof(float), output, &err); // <=====OUTPUT
 
    /* Create a command queue 
 
    Does not support profiling or out-of-order-execution
    */
    queue = clCreateCommandQueue(context, device, 0, &err);
-   if(err < 0) {
-      perror("Couldn't create a command queue");
-      exit(1);   
-   };
 
    /* Create a kernel */
    kernel = clCreateKernel(program, KERNEL_FUNC, &err);
-   if(err < 0) {
-      perror("Couldn't create a kernel");
-      exit(1);
-   };
 
    /* Create kernel arguments 
    
    The integers below represent the position of the kernel argument.
    */
-   err = clSetKernelArg(kernel, 0, sizeof(cl_mem), &input_buffer); // <=====INPUT
-   err |= clSetKernelArg(kernel, 1, sizeof(cl_mem), &out_buffer); // <=====OUTPUT
-   if(err < 0) {
-      perror("Couldn't create a kernel argument");
-      exit(1);
-   }
+   clSetKernelArg(kernel, 0, sizeof(cl_mem), &input_buffer); // <=====INPUT
+   clSetKernelArg(kernel, 1, sizeof(cl_mem), &out_buffer); // <=====OUTPUT
 
    /* Enqueue kernel 
 
@@ -238,20 +216,11 @@ int main() {
       err = clEnqueueNDRangeKernel(queue, kernel, 1, NULL, global, 
          &local_size, 0, NULL, NULL); 
    */
-   //err = clEnqueueNDRangeKernel(queue, kernel, 1, NULL, &global_size, &local_size, 0, NULL, NULL); 
-   err = clEnqueueNDRangeKernel(queue, kernel, 1, NULL, &global_size, NULL, 0, NULL, NULL); 
-   if(err < 0) {
-      perror("Couldn't enqueue the kernel");
-      exit(1);
-   }
+   clEnqueueNDRangeKernel(queue, kernel, 1, NULL, &global_size, &local_size, 0, NULL, NULL); 
+   //clEnqueueNDRangeKernel(queue, kernel, 1, NULL, &global_size, NULL, 0, NULL, NULL); 
 
    /* Read the kernel's output    */
-   err = clEnqueueReadBuffer(queue, out_buffer, CL_TRUE, 0, 
-         sizeof(output), output, 0, NULL, NULL); // <=====GET OUTPUT
-   if(err < 0) {
-      perror("Couldn't read the buffer");
-      exit(1);
-   }
+   clEnqueueReadBuffer(queue, out_buffer, CL_TRUE, 0, sizeof(output), output, 0, NULL, NULL); // <=====GET OUTPUT
 
    /* Check result 
    for (i=0; i<ARRAY_SIZE; i++) {
