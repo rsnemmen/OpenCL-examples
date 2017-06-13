@@ -133,7 +133,9 @@ int main() {
    cl_int i, j, err;
    size_t local_size, global_size;
 
-   /* Data and buffers */
+   /* Data and buffers 
+      ================ 
+   */
    float data[ARRAY_SIZE];
    float sum[2], total, actual_sum;
    cl_mem input_buffer, sum_buffer;
@@ -145,6 +147,7 @@ int main() {
    }
 
    /* Create device and context 
+      ===========================
    Creates a context containing only one device — the device structure 
    created earlier.
    */
@@ -159,6 +162,7 @@ int main() {
    program = build_program(context, device, PROGRAM_FILE);
 
    /* Create data buffer 
+      ====================
 
    • `global_size`: total number of work items that will be 
       executed on the GPU (e.g. total size of your array)
@@ -216,7 +220,7 @@ int main() {
    }
 
    /* Enqueue kernel 
-
+      ===============
    At this point, the application has created all the data structures 
    (device, kernel, program, command queue, and context) needed by an 
    OpenCL host application. Now, it deploys the kernel to a device.
@@ -234,7 +238,9 @@ int main() {
       exit(1);
    }
 
-   /* Read the kernel's output */
+   /* Read the kernel's output 
+      =========================
+   */
    err = clEnqueueReadBuffer(queue, sum_buffer, CL_TRUE, 0, 
          sizeof(sum), sum, 0, NULL, NULL);
    if(err < 0) {
