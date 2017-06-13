@@ -12,7 +12,7 @@ work-items, but for the simple task of adding 64 numbers,
 eight work-items will suffice. 
 */
 
-__kernel void square(__global float* data, __global float* output) {
+__kernel void square(__global float* input, __global float* output) {
    int i = get_global_id(0);
 
    output[i]=input[i]*input[i];

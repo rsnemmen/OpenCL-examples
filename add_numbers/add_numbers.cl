@@ -17,6 +17,9 @@ which to add them. After each work-item computes its sum of eight
 values, these partial results will be added together to form a sum for 
 the entire group. In the end, the kernel will return two sums — one for 
 each work-group executing the kernel.
+
+data <===== input_buffer
+group_result <===== sum_buffer
 */
 
 __kernel void add_numbers(__global float4* data, 
