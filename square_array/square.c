@@ -2,6 +2,7 @@
 #define KERNEL_FUNC "square"
 #define ARRAY_SIZE 100000
 #define MAX_CUS 40 // Max number of GPU compute units
+#define WG_SIZE 512 // Workgroup size
 
 #include <math.h>
 #include <stdio.h>
@@ -175,7 +176,7 @@ int main() {
    • Optimal workgroup size differs across applications
    */
    global_size = ARRAY_SIZE;
-   local_size = MAX_CUS; 
+   local_size = WG_SIZE; 
    //num_groups = global_size/local_size;
    input_buffer = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, ARRAY_SIZE * sizeof(float), data, &err); // <=====INPUT
    out_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, ARRAY_SIZE * sizeof(float), output, &err); // <=====OUTPUT
