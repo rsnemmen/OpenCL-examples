@@ -138,7 +138,7 @@ int main() {
    /* Data and buffers    */
    float data[ARRAY_SIZE], output[ARRAY_SIZE];
    cl_mem input_buffer, out_buffer;
-   cl_int num_groups; // number of workgroups
+   //cl_int num_groups; // number of workgroups
 
    /* Initialize data */
    for(i=0; i<ARRAY_SIZE; i++) {
