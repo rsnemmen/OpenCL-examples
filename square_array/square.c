@@ -1,6 +1,6 @@
 #define PROGRAM_FILE "square.cl"
 #define KERNEL_FUNC "square"
-#define ARRAY_SIZE 100000
+#define ARRAY_SIZE 1000000
 #define MAX_CUS 40 // Max number of GPU compute units
 #define WG_SIZE 512 // Workgroup size
 
