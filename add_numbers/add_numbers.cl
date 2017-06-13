@@ -1,6 +1,9 @@
 /*
-Code that contains kernels to run on accelerator. This will be run
-in parallel.
+Code that contains kernels to run on accelerator in parallel. A kernel 
+represents the basic unit of executable code. Each kernel will be 
+executed on one work item ("pixel") of your parallel task:
+
+1 work item = 1 "pixel" in your image 
 */
 
 __kernel void add_numbers(__global float4* data, 

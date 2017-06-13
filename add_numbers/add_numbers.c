@@ -79,7 +79,12 @@ cl_program build_program(cl_context ctx, cl_device_id dev, const char* filename)
    fread(program_buffer, sizeof(char), program_size, program_handle);
    fclose(program_handle);
 
-   /* Create program from file */
+   /* Create program from file 
+
+   Creates a program from the source code in the add_numbers.cl file. 
+   Specifically, the code reads the file's content into a char array 
+   called program_buffer, and then calls clCreateProgramWithSource.
+   */
    program = clCreateProgramWithSource(ctx, 1, 
       (const char**)&program_buffer, &program_size, &err);
    if(err < 0) {
@@ -88,7 +93,13 @@ cl_program build_program(cl_context ctx, cl_device_id dev, const char* filename)
    }
    free(program_buffer);
 
-   /* Build program */
+   /* Build program 
+
+   The fourth parameter accepts options that configure the compilation. 
+   These are similar to the flags used by gcc. For example, you can 
+   define a macro with the option -DMACRO=VALUE and turn off optimization 
+   with -cl-opt-disable.
+   */
    err = clBuildProgram(program, 0, NULL, NULL, NULL, NULL);
    if(err < 0) {
 
@@ -147,9 +158,27 @@ int main() {
    /* Build program */
    program = build_program(context, device, PROGRAM_FILE);
 
-   /* Create data buffer */
-   global_size = 8;
-   local_size = 4;
+   /* Create data buffer 
+
+   • `global_size`: total number of work items that will be 
+      executed on the GPU (e.g. total size of your array)
+   • `local_size`: size of local workgroup. Each workgroup contains 
+      several work items and goes to a compute unit 
+
+   In this example, the kernel is executed by eight work-items divided into 
+   two work-groups of four work-items each. Returning to my analogy, 
+   this corresponds to a school containing eight students divided into 
+   two classrooms of four students each.   
+
+     Notes: 
+   • Intel recommends workgroup size of 64-128. Often 128 is minimum to 
+   get good performance on GPU
+   • On NVIDIA Fermi, workgroup size must be at least 192 for full 
+   utilization of cores
+   • Optimal workgroup size differs across applications
+   */
+   global_size = 8; 
+   local_size = 4; 
    num_groups = global_size/local_size;
    input_buffer = clCreateBuffer(context, CL_MEM_READ_ONLY |
          CL_MEM_COPY_HOST_PTR, ARRAY_SIZE * sizeof(float), data, &err);
@@ -160,7 +189,10 @@ int main() {
       exit(1);   
    };
 
-   /* Create a command queue */
+   /* Create a command queue 
+
+   Does not support profiling or out-of-order-execution
+   */
    queue = clCreateCommandQueue(context, device, 0, &err);
    if(err < 0) {
       perror("Couldn't create a command queue");
@@ -183,7 +215,18 @@ int main() {
       exit(1);
    }
 
-   /* Enqueue kernel */
+   /* Enqueue kernel 
+
+   At this point, the application has created all the data structures 
+   (device, kernel, program, command queue, and context) needed by an 
+   OpenCL host application. Now, it deploys the kernel to a device.
+
+   Of the OpenCL functions that run on the host, clEnqueueNDRangeKernel 
+   is probably the most important to understand. Not only does it deploy 
+   kernels to devices, it also identifies how many work-items should 
+   be generated to execute the kernel (global_size) and the number of 
+   work-items in each work-group (local_size).
+   */
    err = clEnqueueNDRangeKernel(queue, kernel, 1, NULL, &global_size, 
          &local_size, 0, NULL, NULL); 
    if(err < 0) {
