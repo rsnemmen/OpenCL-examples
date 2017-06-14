@@ -175,9 +175,6 @@ int main() {
    utilization of cores
    • Optimal workgroup size differs across applications
    */
-   global_size = ARRAY_SIZE;
-   local_size = WG_SIZE; 
-   //num_groups = global_size/local_size;
    input_buffer = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, ARRAY_SIZE * sizeof(float), data, &err); // <=====INPUT
    out_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, ARRAY_SIZE * sizeof(float), output, &err); // <=====OUTPUT
 
@@ -217,6 +214,8 @@ int main() {
       err = clEnqueueNDRangeKernel(queue, kernel, 1, NULL, global, 
          &local_size, 0, NULL, NULL); 
    */
+   global_size = ARRAY_SIZE;
+   local_size = WG_SIZE; 
    clEnqueueNDRangeKernel(queue, kernel, 1, NULL, &global_size, &local_size, 0, NULL, NULL); 
    //clEnqueueNDRangeKernel(queue, kernel, 1, NULL, &global_size, NULL, 0, NULL, NULL); 
 
