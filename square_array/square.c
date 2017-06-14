@@ -1,6 +1,5 @@
 #define PROGRAM_FILE "square.cl"
 #define KERNEL_FUNC "square"
-#define ARRAY_SIZE 1000000
 #define MAX_CUS 40 // Max number of GPU compute units
 #define WG_SIZE 512 // Workgroup size
 
@@ -132,7 +131,8 @@ int main() {
    cl_program program;
    cl_kernel kernel;
    cl_command_queue queue;
-   cl_int i, j, err;
+   cl_int i, err;
+   int ARRAY_SIZE=1000000; // size of array
    size_t local_size, global_size;
 
    /* Data and buffers    */
@@ -175,8 +175,8 @@ int main() {
    utilization of cores
    • Optimal workgroup size differs across applications
    */
-   input_buffer = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, ARRAY_SIZE * sizeof(float), data, &err); // <=====INPUT
-   out_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, ARRAY_SIZE * sizeof(float), output, &err); // <=====OUTPUT
+   input_buffer = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(data), data, &err); // <=====INPUT
+   out_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(output), output, &err); // <=====OUTPUT
 
    /* Create a command queue 
 
@@ -193,6 +193,7 @@ int main() {
    */
    clSetKernelArg(kernel, 0, sizeof(cl_mem), &input_buffer); // <=====INPUT
    clSetKernelArg(kernel, 1, sizeof(cl_mem), &out_buffer); // <=====OUTPUT
+   clSetKernelArg(kernel, 2, sizeof(int), &ARRAY_SIZE);
 
    /* Enqueue kernel 
 
@@ -222,10 +223,10 @@ int main() {
    /* Read the kernel's output    */
    clEnqueueReadBuffer(queue, out_buffer, CL_TRUE, 0, sizeof(output), output, 0, NULL, NULL); // <=====GET OUTPUT
 
-   /* Check result 
+   /* Check result */
    for (i=0; i<ARRAY_SIZE; i++) {
-      printf("%f\n", output[i]);
-   } */
+      printf("%f ", output[i]);
+   } 
 
    /* Deallocate resources */
    clReleaseKernel(kernel);
