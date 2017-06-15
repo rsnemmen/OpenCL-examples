@@ -14,14 +14,13 @@ int main(int argc, char *argv[]) {
    cl_program program;
    cl_kernel kernel;
    cl_command_queue queue;
-   cl_int i, err;
+   cl_int err;
    size_t local_size, global_size;
 
    /* Data and buffers    
       =================
    */
    int ntarget;
-   uint2 seed = (uint2)(1,40); // seed for random number generator in kernel
    // Host input and output vectors
    float *houtput; // xa in waste_serial
    // Device input and output buffers
@@ -99,7 +98,6 @@ int main(int argc, char *argv[]) {
    //err = clSetKernelArg(kernel, 0, sizeof(cl_mem), &ddata); // <=====INPUT
    err = clSetKernelArg(kernel, 0, sizeof(cl_mem), &doutput); // <=====OUTPUT
    err |= clSetKernelArg(kernel, 1, sizeof(int), &ntarget);
-   err |= clSetKernelArg(kernel, 2, 2*sizeof(uint), &seed);
 
    /*
    • `global_size`: total number of work items that will be 
@@ -171,7 +169,7 @@ int main(int argc, char *argv[]) {
 
    /* Deallocate resources */
    clReleaseKernel(kernel);
-   clReleaseMemObject(ddata);
+   //clReleaseMemObject(ddata);
    clReleaseMemObject(doutput);
    clReleaseCommandQueue(queue);
    clReleaseProgram(program);

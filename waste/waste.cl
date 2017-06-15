@@ -11,9 +11,10 @@ executed on one work item ("pixel") of your parallel task:
 1 work item = 1 "pixel" in your image 
 */
 
-__kernel void waste(__global float* output, int n, uint2 randoms) {
+__kernel void waste(__global float* output, int n) {
 	int i = get_global_id(0);
 	int j;
+	long rand;
 	float x;
 
 /* Since the work group size is used to tune performance and will 
@@ -28,16 +29,13 @@ and manipulate the device memory.
 		// let's waste CPU time here, generating random numbers
 		for (j=0; j<100; j++) {
 			/* From this topic on random number generation for OpenCL:
-			https://stackoverflow.com/a/16130111/793218
-
-			'randoms' is uint2 passed to kernel. Notice that the seed 
-			includes both the globalID and j; a bit different than
-			the stackoverflow original example.
+			https://stackoverflow.com/a/14149151/793218
 			*/
-			uint seed = randoms.x + i+j;
-			uint t = seed ^ (seed << 11);  
+ 			rand=i*j*as_float(i-j*i);
+		 	rand*=rand<<32^rand<<16|rand;
+		 	rand*=rand+as_double(rand);
 			// our precious random number
-			uint x = randoms.y ^ (randoms.y >> 19) ^ (t ^ (t >> 8)); 
+			x = (float)rand;
 		}		
 
 		output[i]=x;
