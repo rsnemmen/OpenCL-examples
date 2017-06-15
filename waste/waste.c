@@ -1,12 +1,12 @@
-#define PROGRAM_FILE "square.cl"
-#define KERNEL_FUNC "square"
+#define PROGRAM_FILE "waste.cl"
+#define KERNEL_FUNC "waste"
 #define MAX_CUS 24 // Max number of GPU compute units
 #define WG_SIZE 256 // Workgroup size
 
 #include "defs.h"
 
 
-int main() {
+int main(int argc, char *argv[]) {
 
    /* OpenCL structures */
    cl_device_id device;
@@ -15,29 +15,43 @@ int main() {
    cl_kernel kernel;
    cl_command_queue queue;
    cl_int i, err;
-   int ARRAY_SIZE=100000000; // size of arrays
    size_t local_size, global_size;
 
-   /* Data and buffers    */
+   /* Data and buffers    
+      =================
+   */
+   int ntarget;
+   uint2 seed = (uint2)(1,40); // seed for random number generator in kernel
    // Host input and output vectors
-   float *hdata, *houtput;
+   float *houtput; // xa in waste_serial
    // Device input and output buffers
-   cl_mem ddata, doutput;
+   cl_mem doutput;
 
    /* Initialize data */
+   // read command-line argument
+   if ( argc != 2 ) {
+        printf( "Usage: %s ncosmic_rays \n", argv[0] );
+        exit(0);
+   } 
+   sscanf(argv[1], "%i", &ntarget);    
+
    // Size, in bytes, of each vector
-   size_t bytes = ARRAY_SIZE*sizeof(float);
+   size_t bytes = ntarget*sizeof(float);
 
    // Allocate host arrays
-   hdata=(float*)malloc(bytes);
+   //hdata=(float*)malloc(bytes);
    houtput=(float*)malloc(bytes);
 
-   // Populate input array
-   for(i=0; i<ARRAY_SIZE; i++) {
-      hdata[i] = 1.0f*i;
-   }
 
-   /* Create device and context 
+
+
+
+
+
+   /* 
+   Device, context, build, queue
+   ===============================
+   // Create device and context 
 
    Creates a context containing only one device — the device structure 
    created earlier.
@@ -45,33 +59,47 @@ int main() {
    device = create_device();
    context = clCreateContext(NULL, 1, &device, NULL, NULL, &err);
 
-   /* Build program */
+   // Build program 
    program = build_program(context, device, PROGRAM_FILE);
 
-   /* Create a command queue */
+   // Create a command queue
    queue = clCreateCommandQueue(context, device, 0, &err);
 
-   /* Create data buffer 
+
+
+
+
+
+   /* 
+   Create data buffer 
+   ====================
    Create the input and output arrays in device memory for our 
    calculation. 'd' below stands for 'device'.
    */
-   ddata = clCreateBuffer(context, CL_MEM_READ_ONLY, bytes, NULL, NULL);
+   //ddata = clCreateBuffer(context, CL_MEM_READ_ONLY, bytes, NULL, NULL);
    doutput = clCreateBuffer(context, CL_MEM_WRITE_ONLY, bytes, NULL, NULL);
  
    // Write our data set into the input array in device memory
-   err = clEnqueueWriteBuffer(queue, ddata, CL_TRUE, 0,
-                                   bytes, hdata, 0, NULL, NULL);
+   //err = clEnqueueWriteBuffer(queue, ddata, CL_TRUE, 0, bytes, hdata, 0, NULL, NULL);
 
-   /* Create a kernel */
+
+
+
+   /* 
+   Kernel setup and run
+   =====================
+
+   // Create a kernel */
    kernel = clCreateKernel(program, KERNEL_FUNC, &err);
 
-   /* Create kernel arguments 
-   
+   /* 
+   // Create kernel arguments 
    The integers below represent the position of the kernel argument.
    */
-   err = clSetKernelArg(kernel, 0, sizeof(cl_mem), &ddata); // <=====INPUT
-   err |= clSetKernelArg(kernel, 1, sizeof(cl_mem), &doutput); // <=====OUTPUT
-   err |= clSetKernelArg(kernel, 2, sizeof(int), &ARRAY_SIZE);
+   //err = clSetKernelArg(kernel, 0, sizeof(cl_mem), &ddata); // <=====INPUT
+   err = clSetKernelArg(kernel, 0, sizeof(cl_mem), &doutput); // <=====OUTPUT
+   err |= clSetKernelArg(kernel, 1, sizeof(int), &ntarget);
+   err |= clSetKernelArg(kernel, 2, 2*sizeof(uint), &seed);
 
    /*
    • `global_size`: total number of work items that will be 
@@ -95,7 +123,7 @@ int main() {
    // Number of work items in each local work group
    local_size = WG_SIZE;
    // Number of total work items - localSize must be devisor
-   global_size = ceil(ARRAY_SIZE/(float)local_size)*local_size;
+   global_size = ceil(ntarget/(float)local_size)*local_size;
    //size_t global_size[3] = {ARRAY_SIZE, 0, 0}; // for 3D data
    //size_t local_size[3] = {WG_SIZE, 0, 0};
 
@@ -121,6 +149,13 @@ int main() {
    */
    err = clEnqueueNDRangeKernel(queue, kernel, 1, NULL, &global_size, &local_size, 0, NULL, NULL); 
    //clEnqueueNDRangeKernel(queue, kernel, 1, NULL, global_size, local_size, 0, NULL, NULL); 
+
+
+
+
+
+
+
 
    /* Wait for the command queue to get serviced before reading 
    back results */
