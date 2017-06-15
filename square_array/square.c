@@ -3,7 +3,7 @@
 #define MAX_CUS 24 // Max number of GPU compute units
 #define WG_SIZE 256 // Workgroup size
 
-#include defs.h
+#include "defs.h"
 
 
 int main() {
@@ -15,16 +15,20 @@ int main() {
    cl_kernel kernel;
    cl_command_queue queue;
    cl_int i, err;
-   int ARRAY_SIZE=1000000; // size of array
+   int ARRAY_SIZE=1000; // size of array
    size_t local_size, global_size;
 
    /* Data and buffers    */
    // Host input and output vectors
-   float data[ARRAY_SIZE], output[ARRAY_SIZE];
+   float *data, *output;
    // Device input and output buffers
    cl_mem input_buffer, out_buffer;
 
    /* Initialize data */
+   // Allocate host arrays
+   data=(float*)malloc(ARRAY_SIZE*sizeof(float));
+   output=(float*)malloc(ARRAY_SIZE*sizeof(float));
+
    for(i=0; i<ARRAY_SIZE; i++) {
       data[i] = 1.0f*i;
    }
@@ -122,9 +126,9 @@ int main() {
    clEnqueueReadBuffer(queue, out_buffer, CL_TRUE, 0, sizeof(output), output, 0, NULL, NULL); // <=====GET OUTPUT
 
    /* Check result */
-   /*for (i=0; i<ARRAY_SIZE; i++) {
+   for (i=0; i<ARRAY_SIZE; i++) {
       printf("%f ", output[i]);
-   } */
+   } 
 
    /* Deallocate resources */
    clReleaseKernel(kernel);

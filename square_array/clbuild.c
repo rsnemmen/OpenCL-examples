@@ -1,4 +1,4 @@
-#include defs.h
+#include "defs.h"
 
 /* Find a GPU or CPU associated with the first available platform 
 
