@@ -15,7 +15,7 @@ int main() {
    cl_kernel kernel;
    cl_command_queue queue;
    cl_int i, err;
-   int ARRAY_SIZE=1000; // size of array
+   int ARRAY_SIZE=100000000; // size of array
    size_t local_size, global_size;
 
    /* Data and buffers    */
@@ -29,12 +29,12 @@ int main() {
    size_t bytes = ARRAY_SIZE*sizeof(float);
 
    // Allocate host arrays
-   data=(float*)malloc(bytes);
-   output=(float*)malloc(bytes);
+   hdata=(float*)malloc(bytes);
+   houtput=(float*)malloc(bytes);
 
    // Populate input array
    for(i=0; i<ARRAY_SIZE; i++) {
-      data[i] = 1.0f*i;
+      hdata[i] = 1.0f*i;
    }
 
    /* Create device and context 
@@ -48,6 +48,9 @@ int main() {
    /* Build program */
    program = build_program(context, device, PROGRAM_FILE);
 
+   /* Create a command queue */
+   queue = clCreateCommandQueue(context, device, 0, &err);
+
    /* Create data buffer 
    Create the input and output arrays in device memory for our 
    calculation. 'd' below stands for 'device'.
@@ -57,15 +60,9 @@ int main() {
  
    // Write our data set into the input array in device memory
    err = clEnqueueWriteBuffer(queue, ddata, CL_TRUE, 0,
-                                   bytes, data, 0, NULL, NULL);
+                                   bytes, hdata, 0, NULL, NULL);
    //input_buffer = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(float), data, &err); // <=====INPUT
    //out_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(float), output, &err); // <=====OUTPUT
-
-   /* Create a command queue 
-
-   Does not support profiling or out-of-order-execution
-   */
-   queue = clCreateCommandQueue(context, device, 0, &err);
 
    /* Create a kernel */
    kernel = clCreateKernel(program, KERNEL_FUNC, &err);
@@ -136,17 +133,17 @@ int main() {
    clFinish(queue);
 
    /* Read the kernel's output    */
-   clEnqueueReadBuffer(queue, doutput, CL_TRUE, 0, bytes, output, 0, NULL, NULL); // <=====GET OUTPUT
+   clEnqueueReadBuffer(queue, doutput, CL_TRUE, 0, bytes, houtput, 0, NULL, NULL); // <=====GET OUTPUT
 
    /* Check result */
-   for (i=0; i<ARRAY_SIZE; i++) {
-      printf("%f ", output[i]);
-   } 
+   /*for (i=0; i<ARRAY_SIZE; i++) {
+      printf("%f ", houtput[i]);
+   } */
 
    /* Deallocate resources */
    clReleaseKernel(kernel);
-   clReleaseMemObject(out_buffer);
-   clReleaseMemObject(input_buffer);
+   clReleaseMemObject(ddata);
+   clReleaseMemObject(doutput);
    clReleaseCommandQueue(queue);
    clReleaseProgram(program);
    clReleaseContext(context);
