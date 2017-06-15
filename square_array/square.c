@@ -20,15 +20,19 @@ int main() {
 
    /* Data and buffers    */
    // Host input and output vectors
-   float *data, *output;
+   float *hdata, *houtput;
    // Device input and output buffers
-   cl_mem input_buffer, out_buffer;
+   cl_mem ddata, doutput;
 
    /* Initialize data */
-   // Allocate host arrays
-   data=(float*)malloc(ARRAY_SIZE*sizeof(float));
-   output=(float*)malloc(ARRAY_SIZE*sizeof(float));
+   // Size, in bytes, of each vector
+   size_t bytes = ARRAY_SIZE*sizeof(float);
 
+   // Allocate host arrays
+   data=(float*)malloc(bytes);
+   output=(float*)malloc(bytes);
+
+   // Populate input array
    for(i=0; i<ARRAY_SIZE; i++) {
       data[i] = 1.0f*i;
    }
@@ -44,9 +48,18 @@ int main() {
    /* Build program */
    program = build_program(context, device, PROGRAM_FILE);
 
-   /* Create data buffer  */
-   input_buffer = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(float), data, &err); // <=====INPUT
-   out_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(float), output, &err); // <=====OUTPUT
+   /* Create data buffer 
+   Create the input and output arrays in device memory for our 
+   calculation. 'd' below stands for 'device'.
+   */
+   ddata = clCreateBuffer(context, CL_MEM_READ_ONLY, bytes, NULL, NULL);
+   doutput = clCreateBuffer(context, CL_MEM_WRITE_ONLY, bytes, NULL, NULL);
+ 
+   // Write our data set into the input array in device memory
+   err = clEnqueueWriteBuffer(queue, ddata, CL_TRUE, 0,
+                                   bytes, data, 0, NULL, NULL);
+   //input_buffer = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(float), data, &err); // <=====INPUT
+   //out_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(float), output, &err); // <=====OUTPUT
 
    /* Create a command queue 
 
@@ -61,8 +74,8 @@ int main() {
    
    The integers below represent the position of the kernel argument.
    */
-   err = clSetKernelArg(kernel, 0, sizeof(cl_mem), &input_buffer); // <=====INPUT
-   err |= clSetKernelArg(kernel, 1, sizeof(cl_mem), &out_buffer); // <=====OUTPUT
+   err = clSetKernelArg(kernel, 0, sizeof(cl_mem), &ddata); // <=====INPUT
+   err |= clSetKernelArg(kernel, 1, sizeof(cl_mem), &doutput); // <=====OUTPUT
    err |= clSetKernelArg(kernel, 2, sizeof(int), &ARRAY_SIZE);
 
    /*
@@ -123,7 +136,7 @@ int main() {
    clFinish(queue);
 
    /* Read the kernel's output    */
-   clEnqueueReadBuffer(queue, out_buffer, CL_TRUE, 0, sizeof(output), output, 0, NULL, NULL); // <=====GET OUTPUT
+   clEnqueueReadBuffer(queue, doutput, CL_TRUE, 0, bytes, output, 0, NULL, NULL); // <=====GET OUTPUT
 
    /* Check result */
    for (i=0; i<ARRAY_SIZE; i++) {

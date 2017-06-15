@@ -12,7 +12,7 @@ work-items, but for the simple task of adding 64 numbers,
 eight work-items will suffice. 
 */
 
-__kernel void square(__global float* input, __global float* output, const int n) {
+__kernel void square(__global float* input, __global float* output, int n) {
 	int i = get_global_id(0);
 
 /* Since the work group size is used to tune performance and will 
