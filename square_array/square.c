@@ -15,7 +15,7 @@ int main() {
    cl_kernel kernel;
    cl_command_queue queue;
    cl_int i, err;
-   int ARRAY_SIZE=100000000; // size of array
+   int ARRAY_SIZE=100000000; // size of arrays
    size_t local_size, global_size;
 
    /* Data and buffers    */
@@ -61,8 +61,6 @@ int main() {
    // Write our data set into the input array in device memory
    err = clEnqueueWriteBuffer(queue, ddata, CL_TRUE, 0,
                                    bytes, hdata, 0, NULL, NULL);
-   //input_buffer = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(float), data, &err); // <=====INPUT
-   //out_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(float), output, &err); // <=====OUTPUT
 
    /* Create a kernel */
    kernel = clCreateKernel(program, KERNEL_FUNC, &err);
@@ -92,18 +90,14 @@ int main() {
    Notes: 
    • Intel recommends workgroup size of 64-128. Often 128 is minimum to 
    get good performance on GPU
-   • On NVIDIA Fermi, workgroup size must be at least 192 for full 
-   utilization of cores
    • Optimal workgroup size differs across applications
    */
    // Number of work items in each local work group
    local_size = WG_SIZE;
    // Number of total work items - localSize must be devisor
    global_size = ceil(ARRAY_SIZE/(float)local_size)*local_size;
-   //size_t global_size[3] = {ARRAY_SIZE, 0, 0};
+   //size_t global_size[3] = {ARRAY_SIZE, 0, 0}; // for 3D data
    //size_t local_size[3] = {WG_SIZE, 0, 0};
-   //global_size = ARRAY_SIZE;
-   //local_size = WG_SIZE; 
 
    /* Enqueue kernel 
 
