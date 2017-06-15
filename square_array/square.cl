@@ -15,6 +15,13 @@ eight work-items will suffice.
 __kernel void square(__global float* input, __global float* output, const int n) {
 	int i = get_global_id(0);
 
+/* Since the work group size is used to tune performance and will 
+not necessarily be a devisor of the total number of threads needed 
+it is common to be 
+forced to launch more threads than are needed and ignore the extras. 
+After we check that we are inside of the problem domain we can access 
+and manipulate the device memory.
+*/
 	if ((i >=0) && (i<n)) {
 		output[i]=input[i]*input[i];
 	}

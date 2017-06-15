@@ -16,6 +16,10 @@ To install `clinfo` on MacOS:
 
     brew install homebrew/science/clinfo
 
+# References
+
+- [Nice walkthrough of an OpenCL code](https://www.olcf.ornl.gov/tutorials/opencl-vector-addition/)
+
 # TODO
 
 - [ ] get workgroup size automatically

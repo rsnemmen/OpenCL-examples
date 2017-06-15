@@ -1,7 +1,7 @@
 #define PROGRAM_FILE "square.cl"
 #define KERNEL_FUNC "square"
-#define MAX_CUS 40 // Max number of GPU compute units
-#define WG_SIZE 512 // Workgroup size
+#define MAX_CUS 24 // Max number of GPU compute units
+#define WG_SIZE 256 // Workgroup size
 
 #include <math.h>
 #include <stdio.h>
@@ -136,9 +136,10 @@ int main() {
    size_t local_size, global_size;
 
    /* Data and buffers    */
+   // Host input and output vectors
    float data[ARRAY_SIZE], output[ARRAY_SIZE];
+   // Device input and output buffers
    cl_mem input_buffer, out_buffer;
-   //cl_int num_groups; // number of workgroups
 
    /* Initialize data */
    for(i=0; i<ARRAY_SIZE; i++) {
@@ -156,27 +157,9 @@ int main() {
    /* Build program */
    program = build_program(context, device, PROGRAM_FILE);
 
-   /* Create data buffer 
-
-   • `global_size`: total number of work items that will be 
-      executed on the GPU (e.g. total size of your array)
-   • `local_size`: size of local workgroup. Each workgroup contains 
-      several work items and goes to a compute unit 
-
-   In this example, the kernel is executed by eight work-items divided into 
-   two work-groups of four work-items each. Returning to my analogy, 
-   this corresponds to a school containing eight students divided into 
-   two classrooms of four students each.   
-
-     Notes: 
-   • Intel recommends workgroup size of 64-128. Often 128 is minimum to 
-   get good performance on GPU
-   • On NVIDIA Fermi, workgroup size must be at least 192 for full 
-   utilization of cores
-   • Optimal workgroup size differs across applications
-   */
-   input_buffer = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(data), data, &err); // <=====INPUT
-   out_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(output), output, &err); // <=====OUTPUT
+   /* Create data buffer  */
+   input_buffer = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, sizeof(float), data, &err); // <=====INPUT
+   out_buffer = clCreateBuffer(context, CL_MEM_READ_WRITE | CL_MEM_COPY_HOST_PTR, sizeof(float), output, &err); // <=====OUTPUT
 
    /* Create a command queue 
 
@@ -191,9 +174,39 @@ int main() {
    
    The integers below represent the position of the kernel argument.
    */
-   clSetKernelArg(kernel, 0, sizeof(cl_mem), &input_buffer); // <=====INPUT
-   clSetKernelArg(kernel, 1, sizeof(cl_mem), &out_buffer); // <=====OUTPUT
-   clSetKernelArg(kernel, 2, sizeof(int), &ARRAY_SIZE);
+   err = clSetKernelArg(kernel, 0, sizeof(cl_mem), &input_buffer); // <=====INPUT
+   err |= clSetKernelArg(kernel, 1, sizeof(cl_mem), &out_buffer); // <=====OUTPUT
+   err |= clSetKernelArg(kernel, 2, sizeof(int), &ARRAY_SIZE);
+
+   /*
+   • `global_size`: total number of work items that will be 
+      executed on the GPU (e.g. total size of your array)
+   • `local_size`: size of local workgroup. Each workgroup contains 
+      several work items and goes to a compute unit   
+
+   To map our problem onto the underlying hardware we must specify a 
+   local and global integer size. The local size defines the number 
+   of work items in a work group, on an NVIDIA GPU this is equivalent 
+   to the number of threads in a thread block. The global size is the 
+   total number of work items launched. the localSize must be a devisor 
+   of globalSize and so we calculate the smallest integer that covers 
+   our problem domain and is divisible by localSize.
+
+   Notes: 
+   • Intel recommends workgroup size of 64-128. Often 128 is minimum to 
+   get good performance on GPU
+   • On NVIDIA Fermi, workgroup size must be at least 192 for full 
+   utilization of cores
+   • Optimal workgroup size differs across applications
+   */
+   // Number of work items in each local work group
+   local_size = WG_SIZE;
+   // Number of total work items - localSize must be devisor
+   global_size = ceil(ARRAY_SIZE/(float)local_size)*local_size;
+   //size_t global_size[3] = {ARRAY_SIZE, 0, 0};
+   //size_t local_size[3] = {WG_SIZE, 0, 0};
+   //global_size = ARRAY_SIZE;
+   //local_size = WG_SIZE; 
 
    /* Enqueue kernel 
 
@@ -215,18 +228,20 @@ int main() {
       err = clEnqueueNDRangeKernel(queue, kernel, 1, NULL, global, 
          &local_size, 0, NULL, NULL); 
    */
-   global_size = ARRAY_SIZE;
-   local_size = WG_SIZE; 
-   clEnqueueNDRangeKernel(queue, kernel, 1, NULL, &global_size, &local_size, 0, NULL, NULL); 
-   //clEnqueueNDRangeKernel(queue, kernel, 1, NULL, &global_size, NULL, 0, NULL, NULL); 
+   err = clEnqueueNDRangeKernel(queue, kernel, 1, NULL, &global_size, &local_size, 0, NULL, NULL); 
+   //clEnqueueNDRangeKernel(queue, kernel, 1, NULL, global_size, local_size, 0, NULL, NULL); 
+
+   /* Wait for the command queue to get serviced before reading 
+   back results */
+   clFinish(queue);
 
    /* Read the kernel's output    */
    clEnqueueReadBuffer(queue, out_buffer, CL_TRUE, 0, sizeof(output), output, 0, NULL, NULL); // <=====GET OUTPUT
 
    /* Check result */
-   for (i=0; i<ARRAY_SIZE; i++) {
+   /*for (i=0; i<ARRAY_SIZE; i++) {
       printf("%f ", output[i]);
-   } 
+   } */
 
    /* Deallocate resources */
    clReleaseKernel(kernel);
