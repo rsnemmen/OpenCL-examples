@@ -1,4 +1,4 @@
-#define ARRAY_SIZE 1000000
+#define ARRAY_SIZE 100000000
 
 #include <math.h>
 #include <stdio.h>
