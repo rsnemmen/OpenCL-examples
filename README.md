@@ -3,7 +3,7 @@ Simple examples of OpenCL code
 
 Examples included:
 
-- `add_numbers`: add a list of numbers together. Includes detailed error handling which complicates the code
+- `add_numbers`: add a list of numbers together. Includes detailed error handling which makes the code harder to read and understand
 - `square_array`: computes *array*^2
 
 # Info about OpenCL devices
@@ -18,7 +18,7 @@ To install `clinfo` on MacOS:
 
 # References
 
-- [Nice walkthrough of an OpenCL code](https://www.olcf.ornl.gov/tutorials/opencl-vector-addition/)
+- [Very nice walkthrough of an OpenCL code](https://www.olcf.ornl.gov/tutorials/opencl-vector-addition/)
 
 # TODO
 

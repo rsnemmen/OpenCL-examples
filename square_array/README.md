@@ -1,4 +1,9 @@
-Simple example of OpenCL code that adds a series of numbers together. 
+This example takes the square of an array using the GPU.
 
-Code taken from ["A Gentle Introduction to OpenCL" by Matthew Scarpino](http://www.drdobbs.com/parallel/a-gentle-introduction-to-opencl/231002854). 
+This is a combination of the [`add_numbers` code by Matthew Scarpino](http://www.drdobbs.com/parallel/a-gentle-introduction-to-opencl/231002854) and the [`vecAdd` example (OLCF)](https://www.olcf.ornl.gov/tutorials/opencl-vector-addition/). 
+
+My contributions:
+
+- put auxiliary OpenCL functions in separated file to clean up the main routine
+- introduced header `defs.h`
 
