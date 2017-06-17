@@ -4,7 +4,7 @@ Simple examples of OpenCL code
 Examples included:
 
 - `add_numbers`: add a list of numbers together. Includes detailed error handling which makes the code harder to read and understand
-- `square_array`: computes *array*^2
+- `square_array`: computes *array*^2 (I am playing mostly with this one)
 - `sum_array`: sums two arrays
 
 # Info about OpenCL devices
