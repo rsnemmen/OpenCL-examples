@@ -20,3 +20,5 @@ List of available OpenCL devices:
 
  (?) Select device (0-1) > 
 ```
+
+You need a comparable number of lines of `cf4ocl` code compared to opencl, so I do not see immediately an advantage…
