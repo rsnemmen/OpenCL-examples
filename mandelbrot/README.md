@@ -1,18 +1,12 @@
-This example takes the square of an array using the GPU.
-
-This is a combination of the [`add_numbers` code by Matthew Scarpino](http://www.drdobbs.com/parallel/a-gentle-introduction-to-opencl/231002854) and the [`vecAdd` example (OLCF)](https://www.olcf.ornl.gov/tutorials/opencl-vector-addition/). 
+Computes Mandelbrot set. Example taken from the [Chlorine library](https://github.com/Polytonic/Chlorine/tree/master/examples/mandelbrot).  
 
 ```
-square.c
+mandelbrot.c
 ├── clbuild.c Auxiliary routines to build OpenCL programs
 ├── defs.h Header with useful definitions
-└── square.cl Kernel definition
+└── mandelbrot.cl Kernel definition
 ```
 
-For comparison, `square_serial.c` is the serial code that performs the same task as `square.c`.
+I converted the code from C++ to C when appropriate.
 
-My contributions:
-
-- put auxiliary OpenCL functions in separated file to clean up the main routine
-- introduced header `defs.h`
-
+My serial C code is running much faster than what was reported in the Chlorine library. I must be doing something wrong.
