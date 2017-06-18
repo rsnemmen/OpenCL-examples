@@ -1,25 +1,17 @@
-#define ARRAY_SIZE 100000000
-
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-int main() {
-
-   int i,j;
-   float input[ARRAY_SIZE], output[ARRAY_SIZE];
-   float x;
-
-
-
 
 // Computes the Mandelbrot Set to N Iterations
-void solve_mandelbrot(std::vector<float> const & real,
-                      std::vector<float> const & imag,
-                      int iterations,
-                      std::vector<int> & result)
+void solve_mandelbrot(float real[], 
+                      float imag[],
+                      int iterations, int nreals,
+                      int *result)
 {
-    for(unsigned int i = 0; i < real.size(); i++)
+   int i;
+
+    for(i = 0; i < nreals; i++)
     {
         float x = real[i]; // Real Component
         float y = imag[i]; // Imaginary Component
@@ -41,26 +33,38 @@ void solve_mandelbrot(std::vector<float> const & real,
 
 
 
+int main() {
 
+   // Define Mandelbrot Settings
+   int iterations = 2000;
+   float x_min  = -2;
+   float x_max  =  2;
+   float y_min  = -1.5f;
+   float y_max  =  1.5f;
+   float x_step = .002f;
+   float y_step = .002f;
 
-   /* Initialize data */
-   for(i=0; i<ARRAY_SIZE; i++) {
-      input[i] = 1.0f*i;
+   // Create Linear Vector of Coordinates
+   int nreals,nimags;
+   int i;
+   float *reals,*imags; // Host input arrays
+   int *ans; // Host output array
+   nimags=(y_max-y_min)/y_step;
+   nreals=(x_max-x_min)/x_step;
+   reals = (float *)malloc(sizeof(float)*nreals); 
+   imags = (float *)malloc(sizeof(float)*nimags); 
+   ans = (int *)malloc(sizeof(int)*nreals); 
+
+   for (i=0; i<nreals; i++) {
+      reals[i]=reals[i]+i*x_step;
    }
 
-   // Perform computation
-   for (i=0; i<ARRAY_SIZE; i++) {
-      // Waste computing on purpose
-      for (j=0; j<1000000; j++) {
-         x=(float)j;
-      }
+   for (i=0; i<nimags; i++) {
+      imags[i]=imags[i]+i*y_step;
+   } 
 
-      for (j=0; j<1000000; j++) {
-         x=x*x*x+x+x/3.;
-      }      
-      
-      output[i]=input[i]*input[i];
-   }
+   solve_mandelbrot(reals, imags, iterations, nreals, &ans);
+
 
    return 0;
 }

@@ -1,4 +1,4 @@
-PROJ=square
+PROJ=mandelbrot
 
 CC=gcc
 
