@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="6751" systemVersion="14D130a" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6751"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="NSApplication"/>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <menu title="AMainMenu" systemMenu="main" id="29">
+            <items>
+                <menuItem title="OpenCL N-Body Simulation" id="56">
+                    <menu key="submenu" title="OpenCL N-Body Simulation" systemMenu="apple" id="57">
+                        <items>
+                            <menuItem title="About OpenCL N-Body Simulation" id="58">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="orderFrontStandardAboutPanel:" target="-2" id="142"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="236">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Services" id="131">
+                                <menu key="submenu" title="Services" systemMenu="services" id="130"/>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="144">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Hide Instancing" keyEquivalent="h" id="134">
+                                <connections>
+                                    <action selector="hide:" target="-1" id="367"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Hide Others" keyEquivalent="h" id="145">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="hideOtherApplications:" target="-1" id="368"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Show All" id="150">
+                                <connections>
+                                    <action selector="unhideAllApplications:" target="-1" id="370"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="149">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Quit OpenCL N-Body Simulation" keyEquivalent="q" id="136">
+                                <connections>
+                                    <action selector="terminate:" target="-3" id="449"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Window" id="19">
+                    <menu key="submenu" title="Window" systemMenu="window" id="24">
+                        <items>
+                            <menuItem title="Zoom" id="239">
+                                <connections>
+                                    <action selector="performZoom:" target="-1" id="240"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Minimize" keyEquivalent="m" id="537">
+                                <connections>
+                                    <action selector="performMiniaturize:" target="-1" id="538"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Fullscreen" keyEquivalent="f" id="jIK-gm-ZAF">
+                                <connections>
+                                    <action selector="toggleFullscreen:" target="536" id="DDg-w5-btX"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="N0m-n6-QEQ">
+                                <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                            </menuItem>
+                            <menuItem title="Help" keyEquivalent="H" id="23"/>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Help" id="n3k-hc-WiV">
+                    <menu key="submenu" title="Help" systemMenu="window" id="8b3-e1-uWx">
+                        <items>
+                            <menuItem title="Commands" keyEquivalent="/" id="GvS-ph-ahK">
+                                <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
+                                <connections>
+                                    <action selector="toggleHelp:" target="ewq-NW-7Ym" id="mNQ-G8-COH"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+            </items>
+        </menu>
+        <window title="OpenCL N-Body Simulation" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" frameAutosaveName="OpenCL N-Body Simulation" animationBehavior="default" id="371">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" topStrut="YES"/>
+            <rect key="contentRect" x="50" y="50" width="800" height="500"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1578"/>
+            <value key="minSize" type="size" width="640" height="400"/>
+            <value key="maxSize" type="size" width="4096" height="4096"/>
+            <view key="contentView" id="372">
+                <rect key="frame" x="0.0" y="0.0" width="800" height="500"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <customView id="536" customClass="OpenGLView">
+                        <rect key="frame" x="0.0" y="0.0" width="800" height="500"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    </customView>
+                </subviews>
+            </view>
+        </window>
+        <customObject id="ewq-NW-7Ym" customClass="OpenGLView">
+            <connections>
+                <outlet property="mpHUD" destination="euQ-AM-hTc" id="WqN-fy-pD5"/>
+            </connections>
+        </customObject>
+        <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="euQ-AM-hTc" customClass="NSPanel">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" utility="YES" HUD="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="196" y="274" width="303" height="306"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1578"/>
+            <view key="contentView" id="87E-3O-mcN">
+                <rect key="frame" x="0.0" y="-5" width="303" height="306"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="usJ-po-OAl">
+                        <rect key="frame" x="21" y="20" width="264" height="272"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" allowsEditingTextAttributes="YES" id="jZW-JC-lwy">
+                            <font key="font" metaFont="system"/>
+                            <string key="title">Keyboard	Command	
+0-6			Set Demo
+a			Show all meters
+c			Hide/Show CPU Meter
+d			Hide/Show Dock
+e			Earth View
+f			Hide/Show Frames Meter
+g			Swap Visualizer
+h			Hide all Meters
+n			Next Demo
+r			Toggle Rotation
+R			Restart
+s			Swap Simulators
+u			Hide/Show Update Meter
+z			Reset the current demo
+</string>
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                </subviews>
+            </view>
+            <point key="canvasLocation" x="392.5" y="881"/>
+        </window>
+    </objects>
+</document>

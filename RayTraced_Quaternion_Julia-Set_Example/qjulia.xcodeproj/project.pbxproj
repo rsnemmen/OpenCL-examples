@@ -1,0 +1,271 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		466E0F660C932ED500ED01DB /* OpenCL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 466E0F650C932ED500ED01DB /* OpenCL.framework */; };
+		466E0F6D0C932F0F00ED01DB /* qjulia.c in Sources */ = {isa = PBXBuildFile; fileRef = 466E0F5A0C93299100ED01DB /* qjulia.c */; };
+		C394446C0DAFF5B2008FFE68 /* qjulia_kernel.cl in CopyFiles */ = {isa = PBXBuildFile; fileRef = C394446B0DAFF5AE008FFE68 /* qjulia_kernel.cl */; };
+		C3A5D13D0DAFF417005DF44B /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3A5D13C0DAFF417005DF44B /* OpenGL.framework */; };
+		C3A5D1420DAFF42F005DF44B /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3A5D1410DAFF42F005DF44B /* GLUT.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		C39444690DAFF5A0008FFE68 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 16;
+			files = (
+				C394446C0DAFF5B2008FFE68 /* qjulia_kernel.cl in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		466E0F5A0C93299100ED01DB /* qjulia.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = qjulia.c; sourceTree = "<group>"; };
+		466E0F5F0C932E1A00ED01DB /* qjulia */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = qjulia; sourceTree = BUILT_PRODUCTS_DIR; };
+		466E0F650C932ED500ED01DB /* OpenCL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenCL.framework; path = /System/Library/Frameworks/OpenCL.framework; sourceTree = "<absolute>"; };
+		C394446B0DAFF5AE008FFE68 /* qjulia_kernel.cl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = qjulia_kernel.cl; sourceTree = "<group>"; };
+		C3A5D13C0DAFF417005DF44B /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
+		C3A5D1410DAFF42F005DF44B /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = /System/Library/Frameworks/GLUT.framework; sourceTree = "<absolute>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		466E0F5D0C932E1A00ED01DB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				466E0F660C932ED500ED01DB /* OpenCL.framework in Frameworks */,
+				C3A5D13D0DAFF417005DF44B /* OpenGL.framework in Frameworks */,
+				C3A5D1420DAFF42F005DF44B /* GLUT.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		466E0F490C93291B00ED01DB = {
+			isa = PBXGroup;
+			children = (
+				C382C3610ED6042D00C4C6E1 /* Source Files */,
+				C382C35E0ED6041B00C4C6E1 /* Compute Kernels */,
+				C382C30C0ED6041300C4C6E1 /* Frameworks */,
+				466E0F600C932E1A00ED01DB /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		466E0F600C932E1A00ED01DB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				466E0F5F0C932E1A00ED01DB /* qjulia */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C382C30C0ED6041300C4C6E1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C3A5D1410DAFF42F005DF44B /* GLUT.framework */,
+				C3A5D13C0DAFF417005DF44B /* OpenGL.framework */,
+				466E0F650C932ED500ED01DB /* OpenCL.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		C382C35E0ED6041B00C4C6E1 /* Compute Kernels */ = {
+			isa = PBXGroup;
+			children = (
+				C394446B0DAFF5AE008FFE68 /* qjulia_kernel.cl */,
+			);
+			name = "Compute Kernels";
+			sourceTree = "<group>";
+		};
+		C382C3610ED6042D00C4C6E1 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				466E0F5A0C93299100ED01DB /* qjulia.c */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		466E0F5E0C932E1A00ED01DB /* qjulia */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 466E0F640C932E1A00ED01DB /* Build configuration list for PBXNativeTarget "qjulia" */;
+			buildPhases = (
+				466E0F5C0C932E1A00ED01DB /* Sources */,
+				466E0F5D0C932E1A00ED01DB /* Frameworks */,
+				C39444690DAFF5A0008FFE68 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = qjulia;
+			productName = qjulia;
+			productReference = 466E0F5F0C932E1A00ED01DB /* qjulia */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		466E0F4B0C93291B00ED01DB /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0830;
+			};
+			buildConfigurationList = 466E0F4E0C93291B00ED01DB /* Build configuration list for PBXProject "qjulia" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 466E0F490C93291B00ED01DB;
+			productRefGroup = 466E0F600C932E1A00ED01DB /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				466E0F5E0C932E1A00ED01DB /* qjulia */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		466E0F5C0C932E1A00ED01DB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				466E0F6D0C932F0F00ED01DB /* qjulia.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		466E0F4C0C93291B00ED01DB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = ../../inc;
+				LIBRARY_SEARCH_PATHS = ../../lib;
+				ONLY_ACTIVE_ARCH = YES;
+			};
+			name = Debug;
+		};
+		466E0F4D0C93291B00ED01DB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = ../../inc;
+				LIBRARY_SEARCH_PATHS = ../../lib;
+			};
+			name = Release;
+		};
+		466E0F620C932E1A00ED01DB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INSTALL_PATH = /usr/local/bin;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../lib\"";
+				PREBINDING = NO;
+				PRODUCT_NAME = qjulia;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		466E0F630C932E1A00ED01DB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = /usr/local/bin;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/../lib\"";
+				PREBINDING = NO;
+				PRODUCT_NAME = qjulia;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		466E0F4E0C93291B00ED01DB /* Build configuration list for PBXProject "qjulia" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				466E0F4C0C93291B00ED01DB /* Debug */,
+				466E0F4D0C93291B00ED01DB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		466E0F640C932E1A00ED01DB /* Build configuration list for PBXNativeTarget "qjulia" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				466E0F620C932E1A00ED01DB /* Debug */,
+				466E0F630C932E1A00ED01DB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 466E0F4B0C93291B00ED01DB /* Project object */;
+}
