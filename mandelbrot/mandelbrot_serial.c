@@ -9,18 +9,19 @@ void solve_mandelbrot(float real[],
                       int iterations, int nreals,
                       int *result)
 {
-   int i;
+   int i, n;
+   float x,y, xtemp;
 
     for(i = 0; i < nreals; i++)
     {
-        float x = real[i]; // Real Component
-        float y = imag[i]; // Imaginary Component
-        int   n = 0;       // Tracks Color Information
+        x = real[i]; // Real Component
+        y = imag[i]; // Imaginary Component
+        n = 0;       // Tracks Color Information
 
         // Compute the Mandelbrot Set
         while ((x * x + y * y <= 2 * 2) && n < iterations)
         {
-            float xtemp = x * x - y * y + real[i];
+            xtemp = x * x - y * y + real[i];
             y = 2 * x * y + imag[i];
             x = xtemp;
             n++;
