@@ -17,8 +17,11 @@ This will be a good exercise in doing Monte Carlo simulations
 in C.
 */
 
+#define PROGRAM_FILE "cr.cl"
+#define KERNEL_FUNC "cr"
+
 #include "exposure.h"
-#include <omp.h>
+#include "defs.h"
 
 int main(int argc, char *argv[]) {
 	int ntarget, naccept, ntotal, i;
@@ -35,53 +38,75 @@ int main(int argc, char *argv[]) {
     // dynamically allocate arrays
 	xa = (float *)malloc(sizeof(float)*ntarget); 
 	ya = (float *)malloc(sizeof(float)*ntarget); 
-
-	// Equatorial coordinates of accepted events
-	memset(xa, 0, sizeof(int)*ntarget); // initializes array to zeroes
-	memset(ya, 0, sizeof(int)*ntarget);
+	// Size, in bytes, of each vector
+	size_t bytes = ntarget*sizeof(float);
 
 	// Number of accepted events. Must reach naccept=target to start next trial
 	naccept=0;
 	//ntotal=0;	// total number of produced CRs
 
-	/* 
-	Performs the Monte Carlo simulation
-	=====================================
-	Be careful here. Distributing points uniformly in the (alpha,delta)
-	plane does not correspond to a uniform random sky (spherical surface).
-	Instead it will concentrate points towards the poles of the sphere.
+
+
+	/* OpenCL
+	   ==========
 	*/
 
-	// initialize pseudo-random number generator
-    srand(time(NULL)); 
+	/* OpenCL structures */
+	cl_device_id device;
+	cl_context context;
+	cl_program program;
+	cl_kernel kernel;
+	cl_command_queue queue;
+	cl_int err;
+	size_t local_size, global_size;
+	// Device input and output buffers
+	cl_mem dxa, dya;
 
-	// Loop that produces individual CRs
-	#pragma omp parallel shared(naccept,xa,ya) private(x,y,sampling) 
-	{
-		while (naccept < ntarget) {
-			// random number between 0 and 360 
-			x=((float)rand()/(float)(RAND_MAX)) * 360.;
-			// random number between 0 and 1
-			y=((float)rand()/(float)(RAND_MAX));
+  	/* Create device and context; build program; command queue */
+   	device = create_device();
+   	context = clCreateContext(NULL, 1, &device, NULL, NULL, &err);
+	program = build_program(context, device, PROGRAM_FILE);
+	queue = clCreateCommandQueue(context, device, 0, &err);
 
-			// To avoid concentrations towards the poles, generates sin(delta)
-			// between -1 and +1, then converts to delta
-			y = asin(2.*y-1.)*180./M_PI;	// dec
-			
-			// If sampling<exposure for a given CR, it is accepted
-			sampling=((float)rand()/(float)(RAND_MAX));
+	/* Create data buffer    */
+	dxa = clCreateBuffer(context, CL_MEM_WRITE_ONLY, bytes, NULL, NULL);
+	dya = clCreateBuffer(context, CL_MEM_WRITE_ONLY, bytes, NULL, NULL);
 
-			if (sampling <= exposure(y)) {
-				// Protects against racing condition
-				#pragma omp atomic 
-				naccept+=1; 
-				xa[naccept]=x;
-				ya[naccept]=y;
-			}
-			
-			//ntotal=ntotal+1;
-		}
-	} // end omp
+	// Write our data set into the input array in device memory
+	err = clEnqueueWriteBuffer(queue, dxa, CL_TRUE, 0, bytes, xa, 0, NULL, NULL);
+	err |= clEnqueueWriteBuffer(queue, dya, CL_TRUE, 0, bytes, ya, 0, NULL, NULL);
+
+	/* Create a kernel */
+	kernel = clCreateKernel(program, KERNEL_FUNC, &err);
+	/* Create kernel arguments 	*/
+	err = clSetKernelArg(kernel, 0, sizeof(cl_mem), &ddata); 
+	err |= clSetKernelArg(kernel, 1, sizeof(cl_mem), &doutput); 
+	err |= clSetKernelArg(kernel, 2, sizeof(unsigned int), &ARRAY_SIZE);
+	
+	// Get the maximum work group size for executing the kernel on the device
+	err = clGetKernelWorkGroupInfo(kernel, device, CL_KERNEL_WORK_GROUP_SIZE, sizeof(localsize), &localsize, NULL);
+	// Number of total work items - localSize must be devisor
+	globalsize = ceil(ntarget/(float)localsize)*localsize;
+	printf("global size=%u, local size=%u\n", globalsize, localsize);
+
+	/* Enqueue kernel 	*/
+	err = clEnqueueNDRangeKernel(queue, kernel, 1, NULL, &globalsize, &localsize, 0, NULL, NULL); 
+	clFinish(queue);
+
+	/* Read the kernel's output    */
+	clEnqueueReadBuffer(queue, dxa, CL_TRUE, 0, bytes, xa, 0, NULL, NULL); 
+	clEnqueueReadBuffer(queue, dya, CL_TRUE, 0, bytes, ya, 0, NULL, NULL); // <=====GET OUTPUT
+
+	/* Deallocate resources */
+	clReleaseKernel(kernel);
+	clReleaseMemObject(dxa);
+	clReleaseMemObject(dya);
+	clReleaseCommandQueue(queue);
+	clReleaseProgram(program);
+	clReleaseContext(context);
+
+
+
 
 	// Diagnostic messages
 	// ====================
