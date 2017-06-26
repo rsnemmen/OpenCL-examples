@@ -1,0 +1,38 @@
+/*
+Calculates the exposure function of the Pierre Auger Observatory.
+Formula taken from Sommers, P. 2000, astro-ph/0004016. Based on the 
+function exposure.pro that I previously wrote for IDL.
+
+Usage: 
+
+    X=exposure(delta)
+
+where delta is the declination in degrees.
+*/
+
+#include "exposure.h"
+
+float exposure(float deltain) {
+	float delta, xi, lat, thetam, alpham, omega, exposure;
+
+	delta=deltain*M_PI/180.;
+
+	lat = -35.2*M_PI/180.;	// latitude of PA
+	thetam = 60.*M_PI/180.;	// maximum zenith angle of PA
+
+	xi = (cos(thetam) - sin(lat)*sin(delta))/(cos(lat)*cos(delta));
+
+	if (xi > 1) { 
+		alpham=0.;
+	} else if (xi < -1) {
+		alpham=M_PI;
+	} else {
+		alpham=acos(M_PI);
+	}
+
+	omega = cos(lat)*cos(delta)*sin(alpham) + alpham*sin(lat)*sin(delta);
+
+	// Normalizes to 1, for the latitude and max. zenith angle of 
+	// Pierre Auger
+	return omega/1.81092;
+}

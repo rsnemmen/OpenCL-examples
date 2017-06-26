@@ -1,7 +1,5 @@
 #define PROGRAM_FILE "square.cl"
 #define KERNEL_FUNC "square"
-#define MAX_CUS 24 // Max number of GPU compute units
-#define WG_SIZE 256 // Workgroup size
 
 #include "defs.h"
 
@@ -15,7 +13,7 @@ int main() {
    cl_kernel kernel;
    cl_command_queue queue;
    cl_int i, err;
-   int ARRAY_SIZE=100000000; // size of arrays
+   long long int ARRAY_SIZE=100000000; // size of arrays
    size_t local_size, global_size;
 
    /* Data and buffers    */
@@ -71,7 +69,7 @@ int main() {
    */
    err = clSetKernelArg(kernel, 0, sizeof(cl_mem), &ddata); // <=====INPUT
    err |= clSetKernelArg(kernel, 1, sizeof(cl_mem), &doutput); // <=====OUTPUT
-   err |= clSetKernelArg(kernel, 2, sizeof(int), &ARRAY_SIZE);
+   err |= clSetKernelArg(kernel, 2, sizeof(unsigned int), &ARRAY_SIZE);
 
    /*
    • `global_size`: total number of work items that will be 
@@ -92,10 +90,11 @@ int main() {
    get good performance on GPU
    • Optimal workgroup size differs across applications
    */
-   // Number of work items in each local work group
-   local_size = WG_SIZE;
+   // Get the maximum work group size for executing the kernel on the device
+   err = clGetKernelWorkGroupInfo(kernel, device, CL_KERNEL_WORK_GROUP_SIZE, sizeof(local_size), &local_size, NULL);
    // Number of total work items - localSize must be devisor
    global_size = ceil(ARRAY_SIZE/(float)local_size)*local_size;
+   printf("global=%u, local=%u\n", global_size, local_size);
    //size_t global_size[3] = {ARRAY_SIZE, 0, 0}; // for 3D data
    //size_t local_size[3] = {WG_SIZE, 0, 0};
 

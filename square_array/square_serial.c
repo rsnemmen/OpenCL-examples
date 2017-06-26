@@ -1,12 +1,11 @@
-#define ARRAY_SIZE 100000000
-
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 int main() {
 
-   int i;
+   long long int ARRAY_SIZE=10000000000; // size of arrays
+   long long int i;
    float input[ARRAY_SIZE], output[ARRAY_SIZE];
 
    /* Initialize data */
