@@ -1,18 +1,13 @@
-Generates a Mock sky of ultra-high-energy cosmic rays as expected from Auger. 
-
-# Serial version
+Illustrates how to generate random numbers in the host and in the GPU using the library [`clRNG`](http://clmathlibraries.github.io/clRNG/htmldocs/index.html).
 
 ```
-main.c Main loop that generates UHECRs
-├── exposure.c Auger exposure calculation
-└── exposure.h Header with libraries and function definition
+host.c Generates random numbers in the host
 ```
 
-# Parallel (OpenMP) version
-
 ```
-main_omp.c Main parallel loop that generates UHECRs
-├── exposure.c Auger exposure calculation
-└── exposure.h Header with libraries and function definition
+device.c Generates random numbers in the GPU
+├── clbuild.c Auxiliary method to build kernel
+├── kernel.cl Kernel that computes random numbers
+└── defs.h Definitions
 ```
 

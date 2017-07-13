@@ -13,6 +13,7 @@ Simple examples of OpenCL code, which I am using to learn heterogeneous and GPU 
 - `mandelbrot`: my attempt at a simple Mandelbrot set calculation
 - `N-BodySimulation`: Apple's N-body simulator which clearly illustrates the speedup gained by using the GPU. Requires Xcode
 - `RayTraced_Quaternion_Julia-Set_Example`: Apple
+- `rng`: Illustrates how to generate random numbers in the host and in the GPU using the library [`clRNG`](http://clmathlibraries.github.io/clRNG/htmldocs/index.html).
 
 Note: So far, only two of the examples below clearly demonstrate the computational advantage of using a GPU for processing–`N-BodySimulation` and `RayTraced_Quaternion_Julia-Set_Example`, both developed by Apple programmers. As I understand OpenCL better, the codes will improve and the advantages of GPU will become apparent (hopefully).
 
@@ -47,4 +48,4 @@ To install `clinfo` on MacOS:
 
 # TODO
 
-- [ ] get workgroup size automatically
+- [x] get workgroup size automatically
