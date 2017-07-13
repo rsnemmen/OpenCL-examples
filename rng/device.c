@@ -8,6 +8,14 @@ Taken from http://clmathlibraries.github.io/clRNG/htmldocs/index.html.
 #include "defs.h"
 #include <clRNG/mrg31k3p.h>
 
+/* uncomment to use single precision floating point numbers */
+#define CLRNG_SINGLE_PRECISION
+#ifdef CLRNG_SINGLE_PRECISION
+typedef cl_float fp_type;
+#else
+typedef cl_double fp_type;
+#endif
+
 int main(int argc, char *argv[]) {
     cl_int err;
     size_t localsize, globalsize;
@@ -49,7 +57,6 @@ int main(int argc, char *argv[]) {
     states), and an error code. */
     clrngMrg31k3pStream* streams = clrngMrg31k3pCreateStreams(NULL, numWorkItems,
                                &streamBufferSize, (clrngStatus *)&err);
-    //check_error(err, "cannot create random stream array");
 
     /* Then we create an OpenCL buffer of size streamBufferSize and 
     fill it with a copy of the array of streams, to pass to the device. 
@@ -81,7 +88,7 @@ int main(int argc, char *argv[]) {
     clFinish(queue);
 
     /* Read the kernel's output    */
-    clEnqueueReadBuffer(queue, out_d, CL_TRUE, 0, numWorkItems*sizeof(float), out_h, 0, NULL, NULL); 
+    clEnqueueReadBuffer(queue, out_d, CL_TRUE, 0, numWorkItems*sizeof(cl_float), out_h, 0, NULL, NULL); 
 
     /* Deallocate resources */
     clReleaseKernel(kernel);
