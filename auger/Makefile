@@ -2,17 +2,15 @@ CC	= gcc
 FC = gfortran
 
 FFLAGS = -O 
-CFLAGS	= -framework OpenCL -O2 
-#LFLAGS  = -g -O3
+CFLAGS	= -framework OpenCL -O2 -DMAC
+LIBS = -lclRNG
+SRCS = clbuild.c
 
-all: randomauger_omp randomauger
+all: augerocl
 
-randomauger_omp: main_omp.c
-	$(CC) $(CFLAGS) $^ exposure.c -o randomauger_omp
-
-randomauger: main.c
-	$(CC) $(CFLAGS) $^ exposure.c -o randomauger
+augerocl: main.c
+	$(CC) $(CFLAGS) $(LIBS) $^ $(SRCS) -o augerocl
 
 clean:
-	rm -f *.o *.mod randomauger randomauger_omp
+	rm -f *.o *.mod augerocl
 

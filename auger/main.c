@@ -20,15 +20,29 @@ in C.
 #define PROGRAM_FILE "cr.cl"
 #define KERNEL_FUNC "cr"
 
-#include "exposure.h"
 #include "defs.h"
+#include <clRNG/mrg31k3p.h>
+
+/* uncomment to use single precision floating point numbers */
+//#define CLRNG_SINGLE_PRECISION
+#ifdef CLRNG_SINGLE_PRECISION
+typedef cl_float fp_type;
+#else
+typedef cl_double fp_type;
+#endif
+
+
+
+
+
 
 int main(int argc, char *argv[]) {
-	int ntarget, naccept, ntotal, i;
+	int ntarget, i;
 	float *xa, *ya; 
 	cl_int err;
 	size_t localsize, globalsize;
-	cl_mem xa_d, ya_d; 	// Device input and output buffers
+	cl_mem streams_d, xa_d, ya_d; 	// Device input and output buffers
+    size_t streamBufferSize;
 
 	// read command-line argument
 	if ( argc != 2 ) {
@@ -59,7 +73,11 @@ int main(int argc, char *argv[]) {
 	program = build_program(context, device, PROGRAM_FILE);
 	queue = clCreateCommandQueue(context, device, 0, &err);
 
+	// RNG initialization
+    clrngMrg31k3pStream* streams = clrngMrg31k3pCreateStreams(NULL, ntarget, &streamBufferSize, (clrngStatus *)&err);
+
 	/* Create data buffer    */
+    streams_d = clCreateBuffer(context, CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR, streamBufferSize, streams, &err);	
 	xa_d = clCreateBuffer(context, CL_MEM_WRITE_ONLY, bytes, NULL, NULL);
 	ya_d = clCreateBuffer(context, CL_MEM_WRITE_ONLY, bytes, NULL, NULL);
 
@@ -69,15 +87,16 @@ int main(int argc, char *argv[]) {
 
 	/* Kernel setup */
 	kernel = clCreateKernel(program, KERNEL_FUNC, &err);
-	err = clSetKernelArg(kernel, 0, sizeof(cl_mem), &xa_d); 
-	err |= clSetKernelArg(kernel, 1, sizeof(cl_mem), &ya_d); 
-	err |= clSetKernelArg(kernel, 2, sizeof(unsigned int), &ntarget);
+	err = clSetKernelArg(kernel, 0, sizeof(streams_d), &streams_d); 
+	err |= clSetKernelArg(kernel, 1, sizeof(xa_d), &xa_d); 
+	err |= clSetKernelArg(kernel, 2, sizeof(ya_d), &ya_d); 
+	err |= clSetKernelArg(kernel, 3, sizeof(unsigned int), &ntarget);
 	
 	// Get the maximum work group size for executing the kernel on the device
 	err = clGetKernelWorkGroupInfo(kernel, device, CL_KERNEL_WORK_GROUP_SIZE, sizeof(localsize), &localsize, NULL);
 	// Number of total work items - localSize must be devisor
 	globalsize = ceil(ntarget/(float)localsize)*localsize;
-	printf("global size=%u, local size=%u\n", globalsize, localsize);
+	printf("global size=%lu, local size=%lu\n", globalsize, localsize);
 
 	/* Enqueue kernel 	*/
 	err = clEnqueueNDRangeKernel(queue, kernel, 1, NULL, &globalsize, &localsize, 0, NULL, NULL); 
