@@ -4,7 +4,7 @@ FC = gfortran
 FFLAGS = -O 
 CFLAGS	= -framework OpenCL -O2 
 LIBS = -lclRNG
-#LFLAGS  = -g -O3
+SRCS = clbuild.c
 
 all: host device
 
@@ -12,7 +12,7 @@ host: host.c
 	$(CC) $(CFLAGS) $(LIBS) $^ -o host
 
 device: device.c
-	$(CC) $(CFLAGS) $(LIBS) $^ -o host
+	$(CC) $(CFLAGS) $(LIBS) $^ $(SRCS) -o device
 
 clean:
 	rm -f *.o *.mod host device
