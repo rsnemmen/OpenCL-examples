@@ -2,7 +2,7 @@ CC	= gcc
 FC = gfortran
 
 FFLAGS = -O 
-CFLAGS	= -framework OpenCL -O2 
+CFLAGS	= -framework OpenCL -O2 -DMAC
 LIBS = -lclRNG
 SRCS = clbuild.c
 
