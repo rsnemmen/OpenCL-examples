@@ -26,7 +26,9 @@ in C.
 int main(int argc, char *argv[]) {
 	int ntarget, naccept, ntotal, i;
 	float *xa, *ya; 
-	float x, y, sampling;
+	cl_int err;
+	size_t localsize, globalsize;
+	cl_mem xa_d, ya_d; 	// Device input and output buffers
 
 	// read command-line argument
 	if ( argc != 2 ) {
@@ -41,26 +43,15 @@ int main(int argc, char *argv[]) {
 	// Size, in bytes, of each vector
 	size_t bytes = ntarget*sizeof(float);
 
-	// Number of accepted events. Must reach naccept=target to start next trial
-	naccept=0;
-	//ntotal=0;	// total number of produced CRs
-
 
 
 	/* OpenCL
-	   ==========
-	*/
-
-	/* OpenCL structures */
+	   ========== 	*/
 	cl_device_id device;
 	cl_context context;
 	cl_program program;
 	cl_kernel kernel;
 	cl_command_queue queue;
-	cl_int err;
-	size_t local_size, global_size;
-	// Device input and output buffers
-	cl_mem dxa, dya;
 
   	/* Create device and context; build program; command queue */
    	device = create_device();
@@ -69,19 +60,18 @@ int main(int argc, char *argv[]) {
 	queue = clCreateCommandQueue(context, device, 0, &err);
 
 	/* Create data buffer    */
-	dxa = clCreateBuffer(context, CL_MEM_WRITE_ONLY, bytes, NULL, NULL);
-	dya = clCreateBuffer(context, CL_MEM_WRITE_ONLY, bytes, NULL, NULL);
+	xa_d = clCreateBuffer(context, CL_MEM_WRITE_ONLY, bytes, NULL, NULL);
+	ya_d = clCreateBuffer(context, CL_MEM_WRITE_ONLY, bytes, NULL, NULL);
 
-	// Write our data set into the input array in device memory
-	err = clEnqueueWriteBuffer(queue, dxa, CL_TRUE, 0, bytes, xa, 0, NULL, NULL);
-	err |= clEnqueueWriteBuffer(queue, dya, CL_TRUE, 0, bytes, ya, 0, NULL, NULL);
+	// Send data from host to device 
+	//err = clEnqueueWriteBuffer(queue, xa_d, CL_TRUE, 0, bytes, xa, 0, NULL, NULL);
+	//err |= clEnqueueWriteBuffer(queue, ya_d, CL_TRUE, 0, bytes, ya, 0, NULL, NULL);
 
-	/* Create a kernel */
+	/* Kernel setup */
 	kernel = clCreateKernel(program, KERNEL_FUNC, &err);
-	/* Create kernel arguments 	*/
-	err = clSetKernelArg(kernel, 0, sizeof(cl_mem), &ddata); 
-	err |= clSetKernelArg(kernel, 1, sizeof(cl_mem), &doutput); 
-	err |= clSetKernelArg(kernel, 2, sizeof(unsigned int), &ARRAY_SIZE);
+	err = clSetKernelArg(kernel, 0, sizeof(cl_mem), &xa_d); 
+	err |= clSetKernelArg(kernel, 1, sizeof(cl_mem), &ya_d); 
+	err |= clSetKernelArg(kernel, 2, sizeof(unsigned int), &ntarget);
 	
 	// Get the maximum work group size for executing the kernel on the device
 	err = clGetKernelWorkGroupInfo(kernel, device, CL_KERNEL_WORK_GROUP_SIZE, sizeof(localsize), &localsize, NULL);
@@ -94,27 +84,23 @@ int main(int argc, char *argv[]) {
 	clFinish(queue);
 
 	/* Read the kernel's output    */
-	clEnqueueReadBuffer(queue, dxa, CL_TRUE, 0, bytes, xa, 0, NULL, NULL); 
-	clEnqueueReadBuffer(queue, dya, CL_TRUE, 0, bytes, ya, 0, NULL, NULL); // <=====GET OUTPUT
+	clEnqueueReadBuffer(queue, xa_d, CL_TRUE, 0, bytes, xa, 0, NULL, NULL); 
+	clEnqueueReadBuffer(queue, ya_d, CL_TRUE, 0, bytes, ya, 0, NULL, NULL); 
 
 	/* Deallocate resources */
 	clReleaseKernel(kernel);
-	clReleaseMemObject(dxa);
-	clReleaseMemObject(dya);
+	clReleaseMemObject(xa_d);
+	clReleaseMemObject(ya_d);
 	clReleaseCommandQueue(queue);
 	clReleaseProgram(program);
 	clReleaseContext(context);
 
 
-
-
 	// Diagnostic messages
 	// ====================
-	/*for (i=0; i<ntarget; i++) {
-		printf("%f;%f  ", xa[i],ya[i]);
-	}*/
-
-	printf("Naccepted = %i \n", naccept);
+	for (i=0; i<ntarget; i++) {
+		printf("x=%f, y=%f\n", xa[i],ya[i]);
+	}
 
 	return(0);	
 }
