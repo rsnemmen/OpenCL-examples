@@ -9,7 +9,7 @@ Taken from http://clmathlibraries.github.io/clRNG/htmldocs/index.html.
 #include <clRNG/mrg31k3p.h>
 
 /* uncomment to use single precision floating point numbers */
-#define CLRNG_SINGLE_PRECISION
+//#define CLRNG_SINGLE_PRECISION
 #ifdef CLRNG_SINGLE_PRECISION
 typedef cl_float fp_type;
 #else
@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
     cl_mem in_d, out_d; 
     size_t streamBufferSize;
     int numWorkItems;
-    float *out_h;
+    cl_float *out_h;
     int i;
 
     // read command-line argument
@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
     sscanf(argv[1], "%i", &numWorkItems); 
 
     // dynamically allocate arrays
-    out_h = (float *)malloc(sizeof(float)*numWorkItems); 
+    out_h = (cl_float *)malloc(sizeof(cl_float)*numWorkItems); 
 
     /* OpenCL ==============================================*/
     cl_device_id device;
@@ -69,12 +69,12 @@ int main(int argc, char *argv[]) {
                                     streamBufferSize, streams, &err);
     // Create buffer to transfer output back from the device.
     out_d = clCreateBuffer(context, CL_MEM_WRITE_ONLY | CL_MEM_HOST_READ_ONLY, 
-                                     numWorkItems * sizeof(cl_float), out_h, &err);
+                                     numWorkItems * sizeof(cl_float), NULL, &err);
 
     /* Kernel setup */
     kernel = clCreateKernel(program, KERNEL_FUNC, &err);
-    err = clSetKernelArg(kernel, 0, sizeof(cl_mem), &in_d); 
-    err |= clSetKernelArg(kernel, 1, sizeof(cl_mem), &out_d); 
+    err = clSetKernelArg(kernel, 0, sizeof(in_d), &in_d); 
+    err |= clSetKernelArg(kernel, 1, sizeof(out_d), &out_d); 
     err |= clSetKernelArg(kernel, 2, sizeof(unsigned int), &numWorkItems);
     
     // Get the maximum work group size for executing the kernel on the device
@@ -84,6 +84,7 @@ int main(int argc, char *argv[]) {
     printf("global size=%lu, local size=%lu\n", globalsize, localsize);
 
     /* Enqueue kernel   */
+    printf("Random numbers generated inside kernel:\n");
     err = clEnqueueNDRangeKernel(queue, kernel, 1, NULL, &globalsize, &localsize, 0, NULL, NULL); 
     clFinish(queue);
 
@@ -99,7 +100,7 @@ int main(int argc, char *argv[]) {
     clReleaseContext(context);
     /* End of OpenCL routines ==============================================*/
 
-    printf("Random numbers generated in GPU:\n");
+    printf("Random numbers returned to host:\n");
     for (i=0; i<numWorkItems; i++) {
         printf("%f ", out_h[i]);
     }

@@ -24,5 +24,6 @@ __kernel void example(__global clrngMrg31k3pHostStream* streams, __global float*
     	clrngMrg31k3pCopyOverStreamsFromGlobal(1, &private_stream_d, &streams[gid]);
 
     	out[gid] = clrngMrg31k3pRandomU01(&private_stream_d);
+    	printf("%f\n",out[gid]);
     }
 }
