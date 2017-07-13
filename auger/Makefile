@@ -1,17 +1,17 @@
-CC	= gcc-6
+CC	= gcc
 FC = gfortran
 
 FFLAGS = -O 
-CFLAGS	= -fopenmp -O2  
+CFLAGS	= -framework OpenCL -O2 
 #LFLAGS  = -g -O3
 
 all: randomauger_omp randomauger
 
 randomauger_omp: main_omp.c
-	$(CC) $(CFLAGS) main_omp.c exposure.c -o randomauger_omp
+	$(CC) $(CFLAGS) $^ exposure.c -o randomauger_omp
 
 randomauger: main.c
-	$(CC) $(CFLAGS) main.c exposure.c -o randomauger
+	$(CC) $(CFLAGS) $^ exposure.c -o randomauger
 
 clean:
 	rm -f *.o *.mod randomauger randomauger_omp
