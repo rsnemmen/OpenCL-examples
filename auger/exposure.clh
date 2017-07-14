@@ -10,6 +10,12 @@ Usage:
 where delta is the declination in degrees.
 */
 
+// Function declaration
+//float exposure(float deltain);
+
+
+
+
 float exposure(float deltain) {
 	float delta, xi, lat, thetam, alpham, omega;
 

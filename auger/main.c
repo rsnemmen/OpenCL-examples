@@ -69,9 +69,9 @@ int main(int argc, char *argv[]) {
 
   	/* Create device and context; build program; command queue */
    	device = create_device();
-   	context = clCreateContext(NULL, 1, &device, NULL, NULL, &err);
+   	context = clCreateContext(NULL, 1, &device, NULL, NULL, &err); error_check(err, "Couldn't create a context");
 	program = build_program(context, device, PROGRAM_FILE);
-	queue = clCreateCommandQueue(context, device, 0, &err);
+	queue = clCreateCommandQueue(context, device, 0, &err); error_check(err, "Could not create a command queue");
 
 	// RNG initialization
     clrngMrg31k3pStream* streams = clrngMrg31k3pCreateStreams(NULL, ntarget, &streamBufferSize, (clrngStatus *)&err);
@@ -86,7 +86,7 @@ int main(int argc, char *argv[]) {
 	//err |= clEnqueueWriteBuffer(queue, ya_d, CL_TRUE, 0, bytes, ya, 0, NULL, NULL);
 
 	/* Kernel setup */
-	kernel = clCreateKernel(program, KERNEL_FUNC, &err);
+	kernel = clCreateKernel(program, KERNEL_FUNC, &err);	error_check(err, "Could not create a kernel");
 	err = clSetKernelArg(kernel, 0, sizeof(streams_d), &streams_d); 
 	err |= clSetKernelArg(kernel, 1, sizeof(xa_d), &xa_d); 
 	err |= clSetKernelArg(kernel, 2, sizeof(ya_d), &ya_d); 
@@ -99,7 +99,7 @@ int main(int argc, char *argv[]) {
 	printf("global size=%lu, local size=%lu\n", globalsize, localsize);
 
 	/* Enqueue kernel 	*/
-	err = clEnqueueNDRangeKernel(queue, kernel, 1, NULL, &globalsize, &localsize, 0, NULL, NULL); 
+	err = clEnqueueNDRangeKernel(queue, kernel, 1, NULL, &globalsize, &localsize, 0, NULL, NULL);	error_check(err, "Could not enqueue the kernel");
 	clFinish(queue);
 
 	/* Read the kernel's output    */

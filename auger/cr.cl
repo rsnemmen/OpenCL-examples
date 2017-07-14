@@ -10,7 +10,7 @@ a random UHECR position.
 
 #include <clRNG/mrg31k3p.clh>
 
-#include "exposure.clh" // function declaration
+#include "exposure.clh" 
 
 
 
@@ -31,7 +31,9 @@ __kernel void cr(__global clrngMrg31k3pHostStream* streams, __global float* xa, 
 
 			// To avoid concentrations towards the poles, generates sin(delta)
 			// between -1 and +1, then converts to delta
-			y = asin(2.*y-1.)*180./M_PI_F;	// dec
+			y = asin((float)(2.*y-1.))*180./M_PI_F;	// dec
+
+			printf("%f %f\n",x,y);
 			
 			// If sampling<exposure for a given CR, it is accepted
 			sampling=clrngMrg31k3pRandomU01(&private_stream_d);
