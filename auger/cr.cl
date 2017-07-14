@@ -20,7 +20,7 @@ __kernel void cr(__global clrngMrg31k3pHostStream* streams, __global float* xa, 
 
 	if (i<n) {
 		// Loop that produces individual CRs
-		//while (1) {
+		while (1) {
 	    	clrngMrg31k3pStream private_stream_d;   // This is not a pointer!
    	    	clrngMrg31k3pCopyOverStreamsFromGlobal(1, &private_stream_d, &streams[i]);
 
@@ -36,14 +36,15 @@ __kernel void cr(__global clrngMrg31k3pHostStream* streams, __global float* xa, 
 			// If sampling<exposure for a given CR, it is accepted
 			sampling=clrngMrg31k3pRandomU01(&private_stream_d);
 
-			printf("%f ", exposure(y));
+			//printf("x=%f y=%f s=%f e=%f\n", x,y,sampling, exposure(y));
 
-			//if (sampling <= exposure(y)) {
+			if (sampling <= exposure(y)) {
+				printf("Accepted!\n");
 				xa[i]=x;
 				ya[i]=y;
-			//	break;
-			//}
+				break;
+			}
 		
-		//} 
+		} 
 	} 
 }
