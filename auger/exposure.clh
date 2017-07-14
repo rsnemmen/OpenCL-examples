@@ -10,14 +10,10 @@ Usage:
 where delta is the declination in degrees.
 */
 
-// Function declaration
-//float exposure(float deltain);
-
-
 
 
 float exposure(float deltain) {
-	float delta, xi, lat, thetam, alpham, omega;
+	float delta, xi, lat, thetam, alpham, omega, exposure;
 
 	delta=deltain*M_PI_F/180.;
 
@@ -31,10 +27,11 @@ float exposure(float deltain) {
 	} else if (xi < -1) {
 		alpham=M_PI_F;
 	} else {
-		alpham=acos(M_PI_F);
+		alpham=acos(xi);
 	}
 
 	omega = cos(lat)*cos(delta)*sin(alpham) + alpham*sin(lat)*sin(delta);
+
 
 	// Normalizes to 1, for the latitude and max. zenith angle of 
 	// Pierre Auger
