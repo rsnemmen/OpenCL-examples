@@ -6,6 +6,12 @@ a random UHECR position.
 
 - x,y: RA and DEC for cosmic ray
 - n: total number of cosmic rays desired
+
+# Notes
+
+This is not working on MacOS. Once I enable the while loop, the kernel
+never finishes. I suspect this is related to some internal time 
+limit for GPU execution set by the system. Cf https://stackoverflow.com/questions/25395258/large-execution-time-of-opencl-kernel-causes-crash
 */
 
 #include <clRNG/mrg31k3p.clh>
