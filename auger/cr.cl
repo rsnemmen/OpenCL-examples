@@ -39,7 +39,6 @@ __kernel void cr(__global clrngMrg31k3pHostStream* streams, __global float* xa, 
 			//printf("x=%f y=%f s=%f e=%f\n", x,y,sampling, exposure(y));
 
 			if (sampling <= exposure(y)) {
-				printf("Accepted!\n");
 				xa[i]=x;
 				ya[i]=y;
 				break;
