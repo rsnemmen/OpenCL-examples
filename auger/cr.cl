@@ -6,12 +6,6 @@ a random UHECR position.
 
 - x,y: RA and DEC for cosmic ray
 - n: total number of cosmic rays desired
-
-# Notes
-
-This is not working on MacOS. Once I enable the while loop, the kernel
-never finishes. I suspect this is related to some internal time 
-limit for GPU execution set by the system. Cf https://stackoverflow.com/questions/25395258/large-execution-time-of-opencl-kernel-causes-crash
 */
 
 #include <clRNG/mrg31k3p.clh>
@@ -41,8 +35,6 @@ __kernel void cr(__global clrngMrg31k3pHostStream* streams, __global float* xa, 
 			
 			// If sampling<exposure for a given CR, it is accepted
 			sampling=clrngMrg31k3pRandomU01(&private_stream_d);
-
-			//printf("x=%f y=%f s=%f e=%f\n", x,y,sampling, exposure(y));
 
 			if (sampling <= exposure(y)) {
 				xa[i]=x;
