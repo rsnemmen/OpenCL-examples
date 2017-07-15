@@ -25,11 +25,11 @@ __kernel void cr(__global clrngMrg31k3pHostStream* streams, __global float* xa, 
 	float x,y,sampling;
 
 	if (i<n) {
+		clrngMrg31k3pStream private_stream_d;   // This is not a pointer!
+   	    clrngMrg31k3pCopyOverStreamsFromGlobal(1, &private_stream_d, &streams[i]);
+
 		// Loop that produces individual CRs
 		while (1) {
-	    	clrngMrg31k3pStream private_stream_d;   // This is not a pointer!
-   	    	clrngMrg31k3pCopyOverStreamsFromGlobal(1, &private_stream_d, &streams[i]);
-
 			// random number between 0 and 360 
 			x=360.*clrngMrg31k3pRandomU01(&private_stream_d);
 			// random number between 0 and 1

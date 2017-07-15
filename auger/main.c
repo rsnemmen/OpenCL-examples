@@ -68,7 +68,7 @@ int main(int argc, char *argv[]) {
 	cl_command_queue queue;
 
   	/* Create device and context; build program; command queue */
-   	device = create_device();
+   	device = create_device(1); // 1=GPU, 0=CPU
    	context = clCreateContext(NULL, 1, &device, NULL, NULL, &err); error_check(err, "Couldn't create a context");
 	program = build_program(context, device, PROGRAM_FILE);
 	queue = clCreateCommandQueue(context, device, 0, &err); error_check(err, "Could not create a command queue");
@@ -96,7 +96,7 @@ int main(int argc, char *argv[]) {
 	err = clGetKernelWorkGroupInfo(kernel, device, CL_KERNEL_WORK_GROUP_SIZE, sizeof(localsize), &localsize, NULL);
 	// Number of total work items - localSize must be devisor
 	globalsize = ceil(ntarget/(float)localsize)*localsize;
-	printf("global size=%lu, local size=%lu\n", globalsize, localsize);
+	//printf("global size=%lu, local size=%lu\n", globalsize, localsize);
 
 	/* Enqueue kernel 	*/
 	err = clEnqueueNDRangeKernel(queue, kernel, 1, NULL, &globalsize, &localsize, 0, NULL, NULL);	error_check(err, "Could not enqueue the kernel");
@@ -117,9 +117,9 @@ int main(int argc, char *argv[]) {
 
 	// Diagnostic messages
 	// ====================
-	for (i=0; i<ntarget; i++) {
+	/*for (i=0; i<ntarget; i++) {
 		printf("x=%f, y=%f\n", xa[i],ya[i]);
-	}
+	}*/
 
 	return(0);	
 }
