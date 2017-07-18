@@ -47,11 +47,11 @@ endif
 endif
 
 
-all: augerocl
+all: augerOCL
 
-augerocl: main.c
+augerOCL: main.c
 	$(CC) $(CFLAGS) $(LIBS) $^ $(SRCS) $(INC_DIRS:%=-I%) $(LIB_DIRS:%=-L%) -o $@
 
 clean:
-	rm -f *.o *.mod augerocl
+	rm -f *.o *.mod augerOCL
 
