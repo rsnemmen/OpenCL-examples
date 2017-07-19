@@ -7,7 +7,7 @@ FC = gfortran
 FFLAGS = -O 
 
 # Additional libraries and source files
-LIBS = -lclRNG
+LIBS = -lm -lclRNG
 SRCS = clbuild.c
 
 # Check for 32-bit vs 64-bit
@@ -50,8 +50,7 @@ endif
 all: augerOCL
 
 augerOCL: main.c
-	$(CC) $(CFLAGS) $(LIBS) $^ $(SRCS) $(INC_DIRS:%=-I%) $(LIB_DIRS:%=-L%) -o $@
+	$(CC) $(CFLAGS) $^ $(SRCS) $(INC_DIRS:%=-I%) $(LIB_DIRS:%=-L%) -o $@ $(LIBS)
 
 clean:
 	rm -f *.o *.mod augerOCL
-
