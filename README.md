@@ -47,6 +47,9 @@ To install `clinfo` on MacOS:
 - AMD OpenCL course
 - Introduction to OpenCL, Manchester
 
-# TODO
+# Donate
 
-- [x] get workgroup size automatically
+If you are really happy with these examples, [you can buy me a beer](https://www.dropbox.com/s/a0rp5un6ubrkph2/crypto%20wallets.pdf?dl=0). Perhaps I could create a similar repo with CUDA examples?
+
+
+# TODO
