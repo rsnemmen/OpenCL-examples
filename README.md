@@ -49,7 +49,11 @@ To install `clinfo` on MacOS:
 
 # Donate
 
-If you are really happy with these examples, [you can buy me a beer](https://www.dropbox.com/s/a0rp5un6ubrkph2/crypto%20wallets.pdf?dl=0). Perhaps I could create a similar repo with CUDA examples?
+If you are really happy with these examples, you can:  
+[![Buy Me a Coffee](https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=nemmen&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff)](https://www.buymeacoffee.com/nemmen)
+
 
 
 # TODO
+
+- [ ] similar repo with CUDA examples
