@@ -62,7 +62,7 @@ int main(int argc, char *argv[]) {
    program = build_program(context, device, PROGRAM_FILE);
 
    // Create a command queue
-   queue = clCreateCommandQueue(context, device, 0, &err);
+   queue = clCreateCommandQueueWithProperties(context, device, 0, &err);
 
 
 
@@ -163,9 +163,9 @@ int main(int argc, char *argv[]) {
    clEnqueueReadBuffer(queue, doutput, CL_TRUE, 0, bytes, houtput, 0, NULL, NULL); // <=====GET OUTPUT
 
    /* Check result */
-   /*for (i=0; i<ARRAY_SIZE; i++) {
+   for (int i=0; i<ntarget; i++) {
       printf("%f ", houtput[i]);
-   } */
+   }
 
    /* Deallocate resources */
    clReleaseKernel(kernel);

@@ -194,7 +194,7 @@ int main() {
 
    Does not support profiling or out-of-order-execution
    */
-   queue = clCreateCommandQueue(context, device, 0, &err);
+   queue = clCreateCommandQueueWithProperties(context, device, 0, &err);
    if(err < 0) {
       perror("Couldn't create a command queue");
       exit(1);   

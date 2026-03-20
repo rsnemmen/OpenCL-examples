@@ -4,7 +4,7 @@
 
 #include "defs.h"
 
-
+#include <math.h>
 
 int main() {
 
@@ -59,7 +59,7 @@ int main() {
    program = build_program(context, device, PROGRAM_FILE);
 
    /* Create a command queue */
-   queue = clCreateCommandQueue(context, device, 0, &err);
+   queue = clCreateCommandQueueWithProperties(context, device, 0, &err);
 
 
 

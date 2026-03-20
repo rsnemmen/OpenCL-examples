@@ -3,6 +3,7 @@
 
 #include "defs.h"
 
+#include <math.h>
 
 int main() {
 
@@ -47,7 +48,7 @@ int main() {
    program = build_program(context, device, PROGRAM_FILE);
 
    /* Create a command queue */
-   queue = clCreateCommandQueue(context, device, 0, &err);
+   queue = clCreateCommandQueueWithProperties(context, device, 0, &err);
 
    /* Create data buffer 
    Create the input and output arrays in device memory for our 
@@ -94,7 +95,7 @@ int main() {
    err = clGetKernelWorkGroupInfo(kernel, device, CL_KERNEL_WORK_GROUP_SIZE, sizeof(local_size), &local_size, NULL);
    // Number of total work items - localSize must be devisor
    global_size = ceil(ARRAY_SIZE/(float)local_size)*local_size;
-   printf("global=%u, local=%u\n", global_size, local_size);
+   printf("global=%zu, local=%zu\n", global_size, local_size);
    //size_t global_size[3] = {ARRAY_SIZE, 0, 0}; // for 3D data
    //size_t local_size[3] = {WG_SIZE, 0, 0};
 

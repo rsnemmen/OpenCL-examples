@@ -5,6 +5,8 @@ Example on how to use the `cf4ocl` OpenCL wrapper for C. This is a library suppo
 
 Code taken from the [`cf4ocl` tutorial](http://www.fakenmc.com/cf4ocl/docs/latest/tut.html).
 
+`cf4ocl` -- now archived on [GitHub](https://github.com/nunofachada/cf4ocl/releases/)
+
 How to run:
 
 1. Compile with `./make.sh`
