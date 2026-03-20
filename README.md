@@ -25,11 +25,11 @@ The examples that clearly demonstrate the computational advantage of using a GPU
 Each example has its own `Makefile`. Build from within the project directory:
 
 ```bash
-cd <example> && make        # OpenCL version
-cd <example> && make serial # Serial CPU version (where available)
+cd <example> && make        # build OpenCL version
+cd <example> && make run    # build and run
 ```
 
-Exceptions: `N-BodySimulation` and `RayTraced_Quaternion_Julia-Set_Example` use Xcode projects. `cf4cl` uses `make.sh`.
+Exceptions: `N-BodySimulation` uses an Xcode project. `RayTraced_Quaternion_Julia-Set_Example` has a Makefile and CMakeLists.txt. `cf4cl` uses `make.sh`.
 
 ## Info about OpenCL devices
 
