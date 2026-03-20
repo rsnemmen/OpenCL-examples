@@ -62,26 +62,9 @@ To install `clinfo` on MacOS:
 
     brew install clinfo
 
-## References
-
-### Slides
-
-- [OpenCL introduction](https://www.eecis.udel.edu/~cavazos/cisc879/Lecture-06.pdf), S. Grauer-Gray
-- [OpenCL introduction](http://smai.emath.fr/cemracs/cemracs16/images/FDesprez.pdf), F. Desprez
-
-### Code walkthroughs 
-
-- [Vector addition in OpenCL](https://www.olcf.ornl.gov/tutorials/opencl-vector-addition/) (Oak Ridge National Lab)
-- [Getting started with OpenCL and GPU computing](https://www.eriksmistad.no/getting-started-with-opencl-and-gpu-computing/), by E. Smistad
-- [A gentle introduction to OpenCL](http://www.drdobbs.com/parallel/a-gentle-introduction-to-opencl/231002854), Dr. Dobbs. Includes interesting analogies, but may be too hard as a first read
-
-## Like it?
-
-If you are really happy with these examples, you can:
-[![Buy Me a Coffee](https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=nemmen&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff)](https://www.buymeacoffee.com/nemmen)
-
-
 
 ## TODO
 
 - [ ] similar repo with CUDA examples
+
+[![Buy Me a Coffee](https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=nemmen&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff)](https://www.buymeacoffee.com/nemmen)
