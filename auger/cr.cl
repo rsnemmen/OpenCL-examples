@@ -8,9 +8,10 @@ a random UHECR position.
 - n: total number of cosmic rays desired
 */
 
-#include <clRNG/mrg31k3p.clh>
-
+//#include <clRNG/mrg31k3p.clh>
 #include "exposure.clh" 
+#include "mrg31k3p.clh"
+
 
 
 

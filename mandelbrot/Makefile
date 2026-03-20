@@ -2,9 +2,12 @@ PROJ=mandelbrot
 
 CC=gcc
 
-CFLAGS=-std=c99 -Wall -DUNIX -g -DDEBUG
+#CFLAGS=-std=c99 -Wall -DUNIX -g -DDEBUG
+CFLAGS=-std=c99 -Wall -DUNIX -g -DDEBUG -I /opt/amdgpu-pro/include -DCL_TARGET_OPENCL_VERSION=200
 # No OpenCL
 CFLAGSS=-std=c99 -Wall -DUNIX -g -DDEBUG 
+
+LDFLAGS=-L /opt/amdgpu-pro/lib64 -lOpenCL
 
 # Check for 32-bit vs 64-bit
 PROC_TYPE = $(strip $(shell uname -m | grep 64))
@@ -26,7 +29,8 @@ ifneq ($(DARWIN),)
 else
 
 # Linux OS
-LIBS=-lOpenCL
+#LIBS=-lOpenCL
+LIBS=-lm $(LDFLAGS)
 ifeq ($(PROC_TYPE),)
 	CFLAGS+=-m32
 else
@@ -53,6 +57,9 @@ endif
 
 $(PROJ): $(PROJ).c
 	$(CC) $(CFLAGS) -o $@ $^ clbuild.c $(INC_DIRS:%=-I%) $(LIB_DIRS:%=-L%) $(LIBS)
+
+run: $(PROJ)
+	./$(PROJ)
 
 .PHONY: clean
 

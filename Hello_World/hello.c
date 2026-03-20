@@ -58,7 +58,11 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <OpenCL/opencl.h>
+#ifdef MAC
+#include <OpenCL/cl.h>
+#else
+#include <CL/cl.h>
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -95,6 +99,7 @@ int main(int argc, char** argv)
     size_t global;                      // global domain size for our calculation
     size_t local;                       // local domain size for our calculation
 
+    cl_platform_id cpPlatform;          // OpenCL platform
     cl_device_id device_id;             // compute device id 
     cl_context context;                 // compute context
     cl_command_queue commands;          // compute command queue
@@ -114,13 +119,15 @@ int main(int argc, char** argv)
     // Connect to a compute device
     //
     int gpu = 1;
-    err = clGetDeviceIDs(NULL, gpu ? CL_DEVICE_TYPE_GPU : CL_DEVICE_TYPE_CPU, 1, &device_id, NULL);
+    // bind to platform
+    err = clGetPlatformIDs(1, &cpPlatform, NULL);
+    err = clGetDeviceIDs(cpPlatform, gpu ? CL_DEVICE_TYPE_GPU : CL_DEVICE_TYPE_CPU, 1, &device_id, NULL);
     if (err != CL_SUCCESS)
     {
         printf("Error: Failed to create a device group!\n");
         return EXIT_FAILURE;
     }
-  
+
     // Create a compute context 
     //
     context = clCreateContext(0, 1, &device_id, NULL, NULL, &err);
@@ -132,7 +139,7 @@ int main(int argc, char** argv)
 
     // Create a command commands
     //
-    commands = clCreateCommandQueue(context, device_id, 0, &err);
+    commands = clCreateCommandQueueWithProperties(context, device_id, 0, &err);
     if (!commands)
     {
         printf("Error: Failed to create a command commands!\n");

@@ -11,6 +11,21 @@
 #include <CL/cl.h>
 #endif
  
+// OpenCL kernel. Each work item takes care of one element of c
+const char *kernelSource =
+  "#pragma OPENCL EXTENSION cl_khr_fp64 : enable                    \n"
+  "__kernel void vecAdd(  __global double *a,                       \n"
+  "                       __global double *b,                       \n"
+  "                       __global double *c,                       \n"
+  "                       const unsigned int n)                    \n"
+  "{                                                               \n"
+  "    //Get our global thread ID                                  \n"
+  "    int id = get_global_id(0);                                  \n"
+  "                                                                \n"
+  "    //Make sure we do not go out of bounds                      \n"
+  "    if (id < n)                                                 \n"
+  "        c[id] = a[id] + b[id];                                  \n"
+  "}                                                               \n";
  
 int main( int argc, char* argv[] )
 {
@@ -71,7 +86,7 @@ int main( int argc, char* argv[] )
     context = clCreateContext(0, 1, &device_id, NULL, NULL, &err);
  
     // Create a command queue 
-    queue = clCreateCommandQueue(context, device_id, 0, &err);
+    queue = clCreateCommandQueueWithProperties(context, device_id, 0, &err);
  
     // Create the compute program from the source buffer
     program = clCreateProgramWithSource(context, 1,

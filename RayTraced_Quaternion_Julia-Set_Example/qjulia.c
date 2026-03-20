@@ -63,18 +63,23 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <time.h>
 
+#ifdef __APPLE__
 #include <OpenGL/OpenGL.h>
 #include <OpenGL/gl.h>
 #include <OpenGL/CGLDevice.h>
 #include <GLUT/glut.h>
 #include <OpenCL/opencl.h>
-
-#include <mach/mach_time.h>
+#else
+#include <GL/gl.h>
+#include <GL/glut.h>
+#include <CL/opencl.h>
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#define USE_GL_ATTACHMENTS              (1)  // enable OpenGL attachments for Compute results
+#define USE_GL_ATTACHMENTS              (0)  // enable OpenGL attachments for Compute results
 #define DEBUG_INFO                      (0)     
 #define COMPUTE_KERNEL_FILENAME         ("qjulia_kernel.cl")
 #define COMPUTE_KERNEL_METHOD_NAME      ("QJuliaKernel")
@@ -159,7 +164,7 @@ DivideUp(int a, int b)
 static uint64_t
 GetCurrentTime()
 {
-    return mach_absolute_time();
+    return time(NULL);
 }
 	
 static double 
@@ -167,14 +172,6 @@ SubtractTime( uint64_t uiEndTime, uint64_t uiStartTime )
 {    
 	static double s_dConversion = 0.0;
 	uint64_t uiDifference = uiEndTime - uiStartTime;
-	if( 0.0 == s_dConversion )
-	{
-		mach_timebase_info_data_t kTimebase;
-		kern_return_t kError = mach_timebase_info( &kTimebase );
-		if( kError == 0  )
-			s_dConversion = 1e-9 * (double) kTimebase.numer / (double) kTimebase.denom;
-    }
-		
 	return s_dConversion * (double) uiDifference; 
 }
 
@@ -302,8 +299,7 @@ CreateTexture(uint width, uint height)
 
     TextureWidth = width;
     TextureHeight = height;
-    
-    glActiveTextureARB(ActiveTextureUnit);
+
     glGenTextures(1, &TextureId);
     glBindTexture(TextureTarget, TextureId);
     glTexParameteri(TextureTarget, GL_TEXTURE_WRAP_S, GL_CLAMP);
@@ -611,7 +607,7 @@ SetupComputeDevices(int gpu)
   
     // Create a context containing the compute device(s)
     //
-    ComputeContext = clCreateContext(0, 1, &ComputeDeviceId, clLogMessagesToStdoutAPPLE, NULL, &err);
+    ComputeContext = clCreateContext(0, 1, &ComputeDeviceId, NULL, NULL, &err);
     if (!ComputeContext)
     {
         printf("Error: Failed to create a compute context!\n");

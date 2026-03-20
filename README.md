@@ -5,16 +5,19 @@ Simple examples of OpenCL code, which I am using to learn heterogeneous and GPU 
 
 ## Examples included
 
-- `add_numbers`: add a list of numbers together. Includes detailed error handling which makes the code harder to read and understand
-- `square_array`: computes *array*^2 (I am playing mostly with this one)
-- `sum_array`: sums two arrays
+`*` -- reproduced to work in 2025 on AMD GPU
+
+- *`add_numbers`: add a list of numbers together. Includes detailed error handling which makes the code harder to read and understand
+- *`square_array`: computes *array*^2 (I am playing mostly with this one)
+- *`sum_array`: sums two arrays
 - `cf4cl`: testing OpenCL C wrapper
-- `Hello_World`: OpenCL "Hello World" by Apple
-- `mandelbrot`: my attempt at a simple Mandelbrot set calculation
+- *`Hello_World`: OpenCL "Hello World" by Apple
+- *`mandelbrot`: my attempt at a simple Mandelbrot set calculation
 - `N-BodySimulation`: Apple's N-body simulator which clearly illustrates the speedup gained by using the GPU. Requires Xcode
 - `RayTraced_Quaternion_Julia-Set_Example`: Apple
 - `rng`: Illustrates how to generate random numbers in the host and in the GPU using the library [`clRNG`](http://clmathlibraries.github.io/clRNG/htmldocs/index.html)
 - `auger`: generates random cosmic rays on an isotropic sky
+- *`waste`: compute cycle waster
 
 The examples that clearly demonstrate the computational advantage of using a GPU for processing are `N-BodySimulation`, `RayTraced_Quaternion_Julia-Set_Example` (both developed by Apple programmers) and `auger`. For `auger`, I got impressive speedups of >200x compared to a serial code on the CPU.
 
