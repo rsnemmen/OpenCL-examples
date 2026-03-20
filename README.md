@@ -1,5 +1,4 @@
-Simple examples of OpenCL code
-===============================
+# Simple examples of OpenCL code
 
 Simple examples of OpenCL code, which I am using to learn heterogeneous and GPU computing with OpenCL. 
 
@@ -12,11 +11,23 @@ Simple examples of OpenCL code, which I am using to learn heterogeneous and GPU 
 - `Hello_World`: OpenCL "Hello World" by Apple
 - `mandelbrot`: my attempt at a simple Mandelbrot set calculation
 - `N-BodySimulation`: Apple's N-body simulator which clearly illustrates the speedup gained by using the GPU. Requires Xcode
-- `RayTraced_Quaternion_Julia-Set_Example`: Apple
+- `RayTraced_Quaternion_Julia-Set_Example`: Apple's ray-traced quaternion Julia set renderer. Requires Xcode
 - `rng`: Illustrates how to generate random numbers in the host and in the GPU using the library [`clRNG`](http://clmathlibraries.github.io/clRNG/htmldocs/index.html)
 - `auger`: generates random cosmic rays on an isotropic sky
+- `waste`: computational kernel example
 
 The examples that clearly demonstrate the computational advantage of using a GPU for processing are `N-BodySimulation`, `RayTraced_Quaternion_Julia-Set_Example` (both developed by Apple programmers) and `auger`. For `auger`, I got impressive speedups of >200x compared to a serial code on the CPU.
+
+## How to build
+
+Each example has its own `Makefile`. Build from within the project directory:
+
+```bash
+cd <example> && make        # OpenCL version
+cd <example> && make serial # Serial CPU version (where available)
+```
+
+Exceptions: `N-BodySimulation` and `RayTraced_Quaternion_Julia-Set_Example` use Xcode projects. `cf4cl` uses `make.sh`.
 
 ## Info about OpenCL devices
 
@@ -26,7 +37,7 @@ To learn about your OpenCL devices, try:
 
 To install `clinfo` on MacOS:
 
-    brew install homebrew/science/clinfo
+    brew install clinfo
 
 ## References
 
@@ -41,15 +52,9 @@ To install `clinfo` on MacOS:
 - [Getting started with OpenCL and GPU computing](https://www.eriksmistad.no/getting-started-with-opencl-and-gpu-computing/), by E. Smistad
 - [A gentle introduction to OpenCL](http://www.drdobbs.com/parallel/a-gentle-introduction-to-opencl/231002854), Dr. Dobbs. Includes interesting analogies, but may be too hard as a first read
 
-### Courses
-
-- Hands-on OpenCL
-- AMD OpenCL course
-- Introduction to OpenCL, Manchester
-
 ## Like it?
 
-If you are really happy with these examples, you can:  
+If you are really happy with these examples, you can:
 [![Buy Me a Coffee](https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=nemmen&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff)](https://www.buymeacoffee.com/nemmen)
 
 
