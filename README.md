@@ -22,7 +22,28 @@ The examples that clearly demonstrate the computational advantage of using a GPU
 
 ## How to build
 
-Each example has its own `Makefile`. Build from within the project directory:
+### CMake (recommended — works on macOS and Linux)
+
+```bash
+mkdir build && cd build
+cmake ..
+make
+```
+
+Each target is placed in its corresponding subdirectory under `build/`.  Run
+executables from that subdirectory so the `.cl` kernel files are found:
+
+```bash
+cd build/square_array && ./square
+```
+
+Examples requiring [clRNG](http://clmathlibraries.github.io/clRNG/htmldocs/index.html)
+(`auger`, `rng`) are built automatically when clRNG is detected; they are
+silently skipped otherwise.
+
+### Makefiles
+
+Each example also has its own `Makefile`. Build from within the project directory:
 
 ```bash
 cd <example> && make        # build OpenCL version
