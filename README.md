@@ -2,6 +2,8 @@
 
 Simple examples of OpenCL code used to learn heterogeneous and GPU computing with OpenCL. 
 
+**Documentation:** https://rsnemmen.github.io/OpenCL-examples/
+
 ## Examples included
 
 `*` -- reproduced to work in 2025 on AMD GPU
