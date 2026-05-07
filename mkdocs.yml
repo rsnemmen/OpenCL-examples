@@ -1,0 +1,33 @@
+site_name: OpenCL Examples
+site_description: Simple examples of OpenCL code for learning heterogeneous and GPU computing.
+site_author: Rodrigo Nemmen da Silva
+site_url: https://rsnemmen.github.io/OpenCL-examples/
+
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.top
+    - search.highlight
+    - content.code.copy
+
+nav:
+  - Overview: index.md
+  - Building: building.md
+  - Architecture: architecture.md
+  - Examples:
+    - Hello World: examples/hello-world.md
+    - add_numbers: examples/add-numbers.md
+    - sum_array: examples/sum-array.md
+    - square_array: examples/square-array.md
+    - Mandelbrot: examples/mandelbrot.md
+    - Waste: examples/waste.md
+    - RNG: examples/rng.md
+    - Auger: examples/auger.md
+    - N-Body Simulation: examples/n-body.md
+    - Ray Traced Julia Set: examples/julia-set.md
+    - cf4cl: examples/cf4cl.md
+
+markdown_extensions:
+  - tables
+  - fenced_code
