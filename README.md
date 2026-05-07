@@ -1,6 +1,6 @@
 # Simple examples of OpenCL code
 
-Simple examples of OpenCL code, which I am using to learn heterogeneous and GPU computing with OpenCL. 
+Simple examples of OpenCL code used to learn heterogeneous and GPU computing with OpenCL. 
 
 ## Examples included
 
